@@ -1,3 +1,3 @@
 # product
 
-define "trait" that the markets can impl.
+generic/trait for product
