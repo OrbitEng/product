@@ -1,3 +1,3 @@
 pub trait OrbitProductTrait{
-    fn unlist(&self) -> bool;
+    fn unlist(&mut self) -> bool;
 }
