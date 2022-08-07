@@ -1,3 +1,6 @@
+use anchor_lang::prelude::*;
+
 pub trait OrbitProductTrait{
-    fn unlist(&mut self) -> bool;
+    fn list<'a, T: Accounts<'a>>(ctx: Context<T>) -> Result<()>;
+    fn unlist<'a, T: Accounts<'a>>(ctx: Context<T>) -> Result<()>;
 }
