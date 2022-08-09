@@ -1,7 +1,12 @@
-use anchor_lang::{prelude::*, Accounts};
 use crate::product_struct::OrbitProduct;
+use anchor_lang::{
+    prelude::*,
+    Accounts
+};
 
-pub trait OrbitProductTrait{
-    fn list<T>(ctx: Context<T>, prod: OrbitProduct)-> Result<()> where for<'a> T: Accounts<'a>;
-    fn unlist<T>(ctx: Context<T>)-> Result<()> where for<'a> T: Accounts<'a>;
+pub trait OrbitProductTrait<T, U>
+    where T: for<'a> Accounts<'a>, U: for<'b> Accounts<'b>
+{
+    fn list(ctx: Context<T>, prod: OrbitProduct)-> Result<()> ;
+    fn unlist(ctx: Context<U>)-> Result<()> where for<'a> T: Accounts<'a>;
 }
