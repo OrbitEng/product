@@ -4,8 +4,8 @@ use anchor_lang::{
     Accounts
 };
 
-pub trait OrbitProductTrait<T, U>
-    where T: for<'a> Accounts<'a>, U: for<'b> Accounts<'b>
+pub trait OrbitProductTrait<'a, 'b, T, U>
+    where T: Accounts<'a>, U: Accounts<'b>
 {
     fn list(ctx: Context<T>, prod: OrbitProduct)-> Result<()> ;
     fn unlist(ctx: Context<U>)-> Result<()>;
