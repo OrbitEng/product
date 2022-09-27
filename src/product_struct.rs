@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
 pub struct OrbitProduct{
-    pub name: String, // ideally max of 32 chars
+    pub info: String, // ideally max of 32 chars
     pub currency: Pubkey, // 32
     pub price: u64, // 8
     pub available: bool, // 1
