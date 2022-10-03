@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 pub struct OrbitProduct{
     pub info: String, // 43
     pub owner_catalog: Pubkey, // 32
-
+    pub index: u8,
     pub currency: Pubkey, // 32
     pub price: u64, // 8
     pub delivery_estimate: u8, // rough delivery ETA // 1
