@@ -10,6 +10,5 @@ pub struct OrbitProduct{
     pub delivery_estimate: u8, // rough delivery ETA // 1
     pub media: String
 }
-
 // borsh
 // 8 +  (1 + 43) | (32) | (8)  | (32) | (1) | 1 + 43
