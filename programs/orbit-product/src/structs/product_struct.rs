@@ -28,3 +28,16 @@ pub enum DigitalFileTypes{
     Image,
     Folder
 }
+
+// disc a81c2d2c [168, 28, 45, 44, 211, 241, 238, 140]
+#[account]
+pub struct PhysicalProduct{
+    pub metadata: OrbitProduct, // 38 as of beta
+    pub quantity: u32, // quantity per purchase // 4
+}
+
+// disc ee26edf0 [238, 38, 237, 240, 132, 29, 235, 255]
+#[account]
+pub struct CommissionProduct{
+    pub metadata: OrbitProduct
+}
