@@ -21,18 +21,24 @@ pub mod orbit_product {
         init_vendor_listings_handler(ctx)
     }
 
-    pub fn list_product(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-        list_product_handler(ctx, listings_index)
+    pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProduct) -> Result<()>{
+        CommissionProduct::list(ctx, prod)
     }
-    pub fn unlist_product(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-        unlist_product_handler(ctx, listings_index)
+    
+    pub fn list_digital_product(ctx: Context<ListDigitalProduct>, prod: OrbitProduct, file_type: DigitalFileTypes) -> Result<()>{
+        DigitalProduct::list(ctx, prod, file_type)
     }
-    pub fn mark_prod_available(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-        mark_prod_available_handler(ctx, listings_index)
+
+    pub fn list_physical_product(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct, quantity: u32) -> Result<()>{
+        PhysicalProduct::list(ctx, prod, quantity)
     }
-    pub fn mark_prod_unavailable(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-        mark_prod_unavailable_handler(ctx, listings_index)
-    }
+
+    // pub fn mark_prod_available(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+    //     mark_prod_available_handler(ctx, listings_index)
+    // }
+    // pub fn mark_prod_unavailable(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+    //     mark_prod_unavailable_handler(ctx, listings_index)
+    // }
     
     /// OWNERSHIP TRANSFER
     pub fn transfer_vendor_listings_ownership(ctx: Context<TransferOwner>) -> Result<()>{

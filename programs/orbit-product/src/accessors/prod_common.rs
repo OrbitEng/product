@@ -1,8 +1,6 @@
-use std::borrow::Borrow;
-
 use anchor_lang::{
     prelude::*,
-    AccountsClose
+    solana_program::system_program
 };
 use orbit_derive_product::CommonProdUtils;
 
@@ -11,7 +9,14 @@ use crate::{
     DigitalProduct,
     CommissionProduct,
     ListingsStruct,
-    OrbitProduct, RecentMarketListings, DigitalFileTypes
+    OrbitProduct,
+    RecentMarketListings,
+    DigitalFileTypes,
+
+    list_product_handler,
+    unlist_product_handler,
+    mark_prod_available_handler,
+    mark_prod_unavailable_handler,
 };
 
 /////////////////////////////////////////
@@ -23,25 +28,23 @@ pub struct ListCommissionProduct<'info>{
     
     #[account(
         init,
-        space = 200,
+        space = 250,
         payer = seller_wallet,
         seeds = [
             b"commission_product",
-            vendor_catalog.key().as_ref(),
+            vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
         bump
     )]
-    pub commission_product: Box<Account<'info, CommissionProduct>>,
+    pub commission_product: Account<'info, CommissionProduct>,
 
-    #[account(
-        address = prod_in.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
+    #[account(mut)]
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         mut,
-        address = vendor_catalog.listings_owner
+        address = vendor_listings.listings_owner
     )]
     pub seller_wallet: Signer<'info>,
 
@@ -56,33 +59,11 @@ pub struct ListCommissionProduct<'info>{
     pub market_auth: SystemAccount<'info>
 }
 
-#[derive(Accounts)]
-pub struct UnlistCommissionProduct<'info>{
-
-    #[account(mut)]
-    pub commission_product: Box<Account<'info, CommissionProduct>>,
-
-    #[account(
-        address = commission_product.metadata.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
-
-    #[account(
-        mut,
-        address = vendor_catalog.listings_owner
-    )]
-    pub seller_wallet: Signer<'info>
-}
-
 impl CommissionProduct{
-    fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProduct)-> Result<()> {
+    pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProduct)-> Result<()> {
+        list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
         ctx.accounts.commission_product.metadata = prod;
         Ok(())    
-    }
-
-    fn unlist(ctx: Context<UnlistCommissionProduct>)-> Result<()> {
-        
-        ctx.accounts.commission_product.close(ctx.accounts.seller_wallet.to_account_info())
     }
 }
 
@@ -96,25 +77,23 @@ pub struct ListDigitalProduct<'info>{
     
     #[account(
         init,
-        space = 200,
+        space = 250,
         payer = seller_wallet,
         seeds = [
-            b"commission_product",
-            vendor_catalog.key().as_ref(),
+            b"digital_product",
+            vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
         bump
     )]
-    pub digital_product: Box<Account<'info, DigitalProduct>>,
+    pub digital_product: Account<'info, DigitalProduct>,
 
-    #[account(
-        address = prod_in.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
+    #[account(mut)]
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         mut,
-        address = vendor_catalog.listings_owner
+        address = vendor_listings.listings_owner
     )]
     pub seller_wallet: Signer<'info>,
 
@@ -130,33 +109,14 @@ pub struct ListDigitalProduct<'info>{
     pub recent_catalog: Box<Account<'info, RecentMarketListings>>,
 }
 
-#[derive(Accounts)]
-pub struct UnlistDigitalProduct<'info>{
-
-    #[account(mut)]
-    pub digital_product: Box<Account<'info, DigitalProduct>>,
-
-    #[account(
-        address = digital_product.metadata.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
-
-    #[account(
-        mut,
-        address = vendor_catalog.listings_owner
-    )]
-    pub seller_wallet: Signer<'info>,
-}
-
 
 impl DigitalProduct{
-    fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProduct)-> Result<()> {
-        ctx.accounts.digital_product.metadata = prod;
-        Ok(())
-    }
+    pub fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProduct, file_type: DigitalFileTypes)-> Result<()> {
+        list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
-    fn unlist(ctx: Context<UnlistDigitalProduct>)-> Result<()> {
-        ctx.accounts.digital_product.close(ctx.accounts.seller_wallet.to_account_info())
+        ctx.accounts.digital_product.metadata = prod;
+        ctx.accounts.digital_product.digital_file_type = file_type;
+        Ok(())
     }
 }
 
@@ -169,26 +129,24 @@ pub struct ListPhysicalProduct<'info>{
 
     #[account(
         init,
-        space = 300, // 106 + 8. leave room for adjustment during launch
+        space = 250, // 106 + 8. leave room for adjustment during launch
         payer = seller_wallet,
 
         seeds = [
             b"physical_product",
-            vendor_catalog.key().as_ref(),
+            vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
         bump
     )]
-    pub phys_product: Box<Account<'info, PhysicalProduct>>,
+    pub phys_product: Account<'info, PhysicalProduct>,
 
-    #[account(
-        address = phys_product.metadata.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
+    #[account(mut)]
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         mut,
-        address = vendor_catalog.listings_owner
+        address = vendor_listings.listings_owner
     )]
     pub seller_wallet: Signer<'info>,
     
@@ -196,39 +154,54 @@ pub struct ListPhysicalProduct<'info>{
 }
 
 
-#[derive(Accounts)]
-pub struct UnlistPhysicalProduct<'info>{
-    #[account(mut)]
-    pub phys_product: Box<Account<'info, PhysicalProduct>>,
-
-    #[account(
-        address = phys_product.metadata.owner_catalog
-    )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
-
-    #[account(
-        mut,
-        address = vendor_catalog.listings_owner
-    )]
-    pub seller_wallet: Signer<'info>
-}
-
-
 impl PhysicalProduct{
-    fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct) -> Result<()>{
+    pub fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct, quantity: u32) -> Result<()>{
+        list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
         ctx.accounts.phys_product.metadata = prod;
-        ctx.accounts.phys_product.quantity = 0;
+        ctx.accounts.phys_product.quantity = quantity;
         Ok(())
-    }
-
-    fn unlist(ctx: Context<UnlistPhysicalProduct>) -> Result<()>{
-        ctx.accounts.phys_product.close(ctx.accounts.seller_wallet.to_account_info())
     }
 }
 
 ////////////////////////////////////////////
 /// GENERAL
+
+#[derive(Accounts)]
+pub struct UnlistProduct<'info>{
+    #[account(
+        mut,
+        constraint = *prod.owner == crate::ID
+    )]
+    pub prod: AccountInfo<'info>,
+
+    #[account(
+        constraint = prod.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        mut,
+        address = vendor_listings.listings_owner
+    )]
+    pub seller_wallet: Signer<'info>
+}
+
+pub fn unlist(ctx: Context<UnlistProduct>) -> Result<()>{
+    //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
+
+    unlist_product_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.prod.try_borrow_data()?[84])?;
+
+    let info = &ctx.accounts.prod;
+    let sol_destination = ctx.accounts.seller_wallet.to_account_info();
+    let dest_starting_lamports = sol_destination.lamports();
+    **sol_destination.lamports.borrow_mut() =
+        dest_starting_lamports.checked_add(info.lamports()).unwrap();
+    **info.lamports.borrow_mut() = 0;
+
+    info.assign(&system_program::ID);
+    info.realloc(0, false).map_err(Into::into)
+}
 
 
 #[derive(Accounts, CommonProdUtils)]
@@ -236,34 +209,40 @@ pub struct UpdateProductField<'info>{
     #[account(
         mut,
         constraint = *product.owner == crate::ID,
+        constraint = product.data_len() == 250
     )]
     /// CHECK: we check the program owns it
     pub product: AccountInfo<'info>,
 
     #[account(
-        constraint = product.try_borrow_data()?[52..84] == vendor_catalog.key().to_bytes()
+        constraint = product.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
     )]
-    pub vendor_catalog:Box<Account<'info, ListingsStruct>>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         mut,
-        address = vendor_catalog.listings_owner
+        address = vendor_listings.listings_owner
     )]
     pub seller_wallet: Signer<'info>,
 }
 
+///////////////////////
 /// PHYS ONLY
 
 pub fn update_quantity_handler(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
     let mut phys_prod = Account::<PhysicalProduct>::try_from(&ctx.accounts.product)?;
     phys_prod.quantity = qnt;
-    Ok(())
+    if qnt == 0{
+        mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, phys_prod.metadata.index)?;
+    }
+    phys_prod.exit(&crate::ID)
 }
 
+/////////////////////
 /// DIGITAL ONLY
 
 pub fn set_file_type_handler(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
     let mut digital_prod = Account::<DigitalProduct>::try_from(&ctx.accounts.product)?;
     digital_prod.digital_file_type = file_type;
-    Ok(())
+    digital_prod.exit(&crate::ID)
 }

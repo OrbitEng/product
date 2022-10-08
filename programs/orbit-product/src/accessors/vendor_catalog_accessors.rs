@@ -8,15 +8,15 @@ pub struct CreateVendorListing<'info>{
     #[account(
         init,
         seeds = [
-            b"listings_listings",
+            b"vendor_listings",
             market_type.as_bytes(),
             market_account.key().as_ref()
         ],
         bump,
         payer = wallet,
-        space = 100
+        space = 200
     )]
-    pub vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         seeds = [
@@ -55,7 +55,7 @@ pub fn init_vendor_listings_handler(ctx: Context<CreateVendorListing>) -> Result
 #[derive(Accounts)]
 pub struct ModifyVendorListings<'info>{
     #[account(mut)]
-    pub vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
         address = vendor_listings.listings_owner
@@ -63,38 +63,38 @@ pub struct ModifyVendorListings<'info>{
     pub wallet: Signer<'info>
 }
 
-pub fn list_product_handler(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+pub fn list_product_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
     let avail_ind = 1<<(listings_index%64);
     let outer_ind = listings_index/64;
-    if ctx.accounts.vendor_listings.address_available[outer_ind as usize] & avail_ind == 0{
+    if vendor_listings.address_available[outer_ind as usize] & avail_ind == 0{
         return err!(ProductErrors::AddressUnavailable)
     }
-    ctx.accounts.vendor_listings.address_available[outer_ind as usize] &= !(avail_ind as u64);
-    ctx.accounts.vendor_listings.product_available[outer_ind as usize] |= avail_ind;
+    vendor_listings.address_available[outer_ind as usize] &= !(avail_ind as u64);
+    vendor_listings.product_available[outer_ind as usize] |= avail_ind;
     Ok(())
 }
 
-pub fn unlist_product_handler(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+pub fn unlist_product_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
     let avail_ind = 1<<(listings_index%64);
     let outer_ind = listings_index/64;
     
-    ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
-    ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+    vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+    vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
     Ok(())
 }
 
-pub fn mark_prod_available_handler(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+pub fn mark_prod_available_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
     let avail_ind = 1<<(listings_index%64);
     let outer_ind = listings_index/64;
-    ctx.accounts.vendor_listings.product_available[outer_ind as usize] |= avail_ind as u64;
+    vendor_listings.product_available[outer_ind as usize] |= avail_ind as u64;
     Ok(())
 }
 
-pub fn mark_prod_unavailable_handler(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
+pub fn mark_prod_unavailable_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
     let avail_ind = 1<<(listings_index%64);
     let outer_ind = listings_index/64;
     
-    ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+    vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
     Ok(())
 }
 
@@ -108,12 +108,12 @@ pub struct TransferOwner<'info>{
         mut,
         constraint = vendor_listings.listings_owner == source_account.wallet
     )]
-    pub vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub vendor_listings: Box<Account<'info, ListingsStruct>>,
 
     #[account(
         address = transfer_struct.source
     )]
-    pub source_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub source_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = transfer_struct.destination
@@ -121,6 +121,12 @@ pub struct TransferOwner<'info>{
     pub destination_account:Box<Account<'info, OrbitMarketAccount>>,
     
     pub transfer_struct: Account<'info, AccountTransfer>,
+
+    #[account(
+        address = source_account.wallet,
+        constraint = vendor_listings.listings_owner == wallet.key()
+    )]
+    pub wallet: Signer<'info>
 }
 
 pub fn transfer_vendor_listings_ownership_handler(ctx: Context<TransferOwner>) -> Result<()>{
@@ -177,6 +183,11 @@ pub struct TransferAllOwner<'info>{
     pub destination_account:Box<Account<'info, OrbitMarketAccount>>,
     
     pub transfer_struct: Account<'info, AccountTransfer>,
+
+    #[account(
+        address = source_account.wallet
+    )]
+    pub wallet: Signer<'info>
 }
 
 pub fn transfer_all_vendor_listings_ownership_handler(ctx: Context<TransferAllOwner>) -> Result<()>{
