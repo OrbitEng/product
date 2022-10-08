@@ -2,13 +2,13 @@ use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
 pub struct OrbitProduct{
-    pub info: String, // 43
-    pub owner_catalog: Pubkey, // 32
-    pub index: u8,
-    pub currency: Pubkey, // 32
-    pub price: u64, // 8
-    pub delivery_estimate: u8, // rough delivery ETA // 1
-    pub media: String
+    pub info: String, // 43 :0-52
+    pub owner_catalog: Pubkey, // 32 : 52-84
+    pub index: u8, // :84 - 85
+    pub currency: Pubkey, // 32 :85 - 117
+    pub price: u64, // 8 : 117 - 125
+    pub delivery_estimate: u8, // rough delivery ETA // 1 // 125 - 126
+    pub media: String // :126-169
 }
 // borsh
 // 8 +  (1 + 43) | (32) | (8)  | (32) | (1) | 1 + 43

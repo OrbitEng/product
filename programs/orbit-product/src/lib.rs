@@ -1,5 +1,3 @@
-extern crate self as product;
-
 use anchor_lang::prelude::*;
 
 pub use orbit_derive_product::CommonProdUtils;
@@ -15,7 +13,7 @@ pub use errors::*;
 declare_id!("DpKqMhUHc6YDjzGmxEKGZK8MxpdtW9X6jmYZrJ9UZj4g");
 
 #[program]
-pub mod orbit_digital_market {
+pub mod orbit_product {
     use super::*;
 
     /// VENDOR LISTINGS UTILS
@@ -66,5 +64,11 @@ pub mod orbit_digital_market {
     /// PHYSICAL
     pub fn update_product_quantity(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
         update_quantity_handler(ctx, qnt)
+    }
+
+    /// DIGITAL
+    
+    pub fn set_file_type(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
+        set_file_type_handler(ctx, file_type)
     }
 }

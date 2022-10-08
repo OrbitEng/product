@@ -24,22 +24,35 @@ pub fn derive_common_prod_utils(item: TokenStream) -> TokenStream{
 
     let expanded = quote!{
         pub fn update_price_handler(ctx: Context< #name >, price: u64) -> Result<()>{
-            ctx.accounts.#field_name.metadata.price = price;
+            let mut mut_data = ctx.accounts.#field_name.try_borrow_data()?;
+            let price_vec = price.to_le_bytes();
+            for i in 0..8{
+                mut_data[117+i] = price_vec[i];
+            }
             Ok(())
         }
         
         pub fn update_currency_handler(ctx: Context< #name >, currency: Pubkey) -> Result<()>{
-            ctx.accounts.#field_name.metadata.currency = currency;
+            let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
+            for (ind, byte_val) in currency.to_bytes().iter().enumerate(){
+                mut_data[85+ind] = byte_val;
+            }
             Ok(())
         }
         
         pub fn update_media_handler(ctx: Context< #name >, link: String) -> Result<()>{
-            ctx.accounts.#field_name.metadata.media = link;
+            let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
+            for (ind, byte_val) in link.as_bytes().iter().enumerate(){
+                mut_data[127+ind] = byte_val;
+            }
             Ok(())
         }
         
         pub fn update_info_handler(ctx: Context< #name >, info: String) -> Result<()>{
-            ctx.accounts.#field_name.metadata.info = info;
+            let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
+            for (ind, byte_val) in info.as_bytes().iter().enumerate(){
+                mut_data[1+ind] = byte_val;
+            }
             Ok(())
         }
     };

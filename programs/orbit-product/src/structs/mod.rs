@@ -6,3 +6,6 @@ pub use product_trait::*;
 
 pub mod listings_struct;
 pub use listings_struct::*;
+
+pub mod recent_listings_struct;
+pub use recent_listings_struct::*;
