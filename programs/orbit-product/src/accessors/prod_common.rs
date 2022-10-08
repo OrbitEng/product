@@ -11,7 +11,7 @@ use crate::{
     DigitalProduct,
     CommissionProduct,
     ListingsStruct,
-    OrbitProduct
+    OrbitProduct, RecentMarketListings, DigitalFileTypes
 };
 
 /////////////////////////////////////////
@@ -252,11 +252,18 @@ pub struct UpdateProductField<'info>{
     pub seller_wallet: Signer<'info>,
 }
 
-pub fn update_quantity_handler(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
-    for (i, j) in ctx.accounts.product.key().to_bytes().iter().enumerate(){
+/// PHYS ONLY
 
-    }
+pub fn update_quantity_handler(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
     let mut phys_prod = Account::<PhysicalProduct>::try_from(&ctx.accounts.product)?;
     phys_prod.quantity = qnt;
+    Ok(())
+}
+
+/// DIGITAL ONLY
+
+pub fn set_file_type_handler(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
+    let mut digital_prod = Account::<DigitalProduct>::try_from(&ctx.accounts.product)?;
+    digital_prod.digital_file_type = file_type;
     Ok(())
 }
