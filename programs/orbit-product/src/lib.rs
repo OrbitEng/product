@@ -32,13 +32,6 @@ pub mod orbit_product {
     pub fn list_physical_product(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct, quantity: u32) -> Result<()>{
         PhysicalProduct::list(ctx, prod, quantity)
     }
-
-    // pub fn mark_prod_available(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-    //     mark_prod_available_handler(ctx, listings_index)
-    // }
-    // pub fn mark_prod_unavailable(ctx: Context<ModifyVendorListings>, listings_index: u8) -> Result<()>{
-    //     mark_prod_unavailable_handler(ctx, listings_index)
-    // }
     
     /// OWNERSHIP TRANSFER
     pub fn transfer_vendor_listings_ownership(ctx: Context<TransferOwner>) -> Result<()>{
@@ -53,6 +46,13 @@ pub mod orbit_product {
     }
 
     /// PRODUCT MODIFIERS
+    
+    pub fn mark_prod_available(ctx: Context<UpdateProductField>) -> Result<()>{
+        mark_available_handler(ctx)
+    }
+    pub fn mark_prod_unavailable(ctx: Context<UpdateProductField>) -> Result<()>{
+        mark_unavailable_handler(ctx)
+    }
     
     pub fn update_product_price(ctx: Context<UpdateProductField>, price: u64) -> Result<()>{
         update_price_handler(ctx, price)

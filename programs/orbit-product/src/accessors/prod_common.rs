@@ -1,6 +1,6 @@
 use anchor_lang::{
     prelude::*,
-    solana_program::system_program
+    solana_program::system_program, Discriminator
 };
 use orbit_derive_product::CommonProdUtils;
 
@@ -16,7 +16,7 @@ use crate::{
     list_product_handler,
     unlist_product_handler,
     mark_prod_available_handler,
-    mark_prod_unavailable_handler,
+    mark_prod_unavailable_handler, ProductErrors, edit_recent_listings_handler,
 };
 
 /////////////////////////////////////////
@@ -63,6 +63,22 @@ impl CommissionProduct{
     pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProduct)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
         ctx.accounts.commission_product.metadata = prod;
+
+        if ctx.remaining_accounts.len() == 1{
+            let addr = Pubkey::find_program_address(&[
+                b"recent_listings",
+                CommissionProduct::discriminator().as_ref()
+            ], 
+            &crate::ID);
+
+            if ctx.remaining_accounts[0].key() != addr.0{
+                return err!(ProductErrors::InvalidCatalogType)
+            };
+
+            let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.commission_product.to_account_info())?;
+            recent_catalog.exit(&crate::ID)?;
+        }
         Ok(())    
     }
 }
@@ -116,6 +132,22 @@ impl DigitalProduct{
 
         ctx.accounts.digital_product.metadata = prod;
         ctx.accounts.digital_product.digital_file_type = file_type;
+
+        if ctx.remaining_accounts.len() == 1{
+            let addr = Pubkey::find_program_address(&[
+                b"recent_listings",
+                DigitalProduct::discriminator().as_ref()
+            ], 
+            &crate::ID);
+
+            if ctx.remaining_accounts[0].key() != addr.0{
+                return err!(ProductErrors::InvalidCatalogType)
+            };
+
+            let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.digital_product.to_account_info())?;
+            recent_catalog.exit(&crate::ID)?;
+        }
         Ok(())
     }
 }
@@ -160,6 +192,22 @@ impl PhysicalProduct{
 
         ctx.accounts.phys_product.metadata = prod;
         ctx.accounts.phys_product.quantity = quantity;
+
+        if ctx.remaining_accounts.len() == 1{
+            let addr = Pubkey::find_program_address(&[
+                b"recent_listings",
+                PhysicalProduct::discriminator().as_ref()
+            ], 
+            &crate::ID);
+
+            if ctx.remaining_accounts[0].key() != addr.0{
+                return err!(ProductErrors::InvalidCatalogType)
+            };
+
+            let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.phys_product.to_account_info())?;
+            recent_catalog.exit(&crate::ID)?;
+        }
         Ok(())
     }
 }
@@ -215,6 +263,7 @@ pub struct UpdateProductField<'info>{
     pub product: AccountInfo<'info>,
 
     #[account(
+        mut,
         constraint = product.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
