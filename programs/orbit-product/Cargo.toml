@@ -17,5 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.25.0"
-market-accounts = {git = "https://github.com/OrbitEng/accounts", features=["cpi"]}
 orbit-derive-product = {path = "./derive/product-common"}

@@ -746,15 +746,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "market-accounts"
-version = "0.1.0"
-source = "git+https://github.com/OrbitEng/accounts#a187e9e62f107190164123421d06a8108480726c"
-dependencies = [
- "anchor-lang",
- "orbit-addresses",
-]
-
-[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -821,14 +812,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "orbit-addresses"
-version = "0.1.0"
-source = "git+https://github.com/OrbitEng/addresses#a8e5f9b6b2b0906c1db7aec74dbc065aec77306a"
-dependencies = [
- "anchor-lang",
-]
-
-[[package]]
 name = "orbit-derive-product"
 version = "0.1.0"
 dependencies = [
@@ -841,7 +824,6 @@ name = "orbit-product"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
- "market-accounts",
  "orbit-derive-product",
 ]
 

@@ -219,7 +219,7 @@ impl PhysicalProduct{
 pub struct UnlistProduct<'info>{
     #[account(
         mut,
-        constraint = *prod.owner == crate::ID
+        owner = crate::ID
     )]
     /// CHECK: we do owner check
     pub prod: AccountInfo<'info>,
@@ -257,7 +257,7 @@ pub fn unlist(ctx: Context<UnlistProduct>) -> Result<()>{
 pub struct UpdateProductField<'info>{
     #[account(
         mut,
-        constraint = *product.owner == crate::ID,
+        owner = crate::ID,
         constraint = product.data_len() == 250
     )]
     /// CHECK: we check the program owns it

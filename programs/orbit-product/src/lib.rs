@@ -17,8 +17,8 @@ pub mod orbit_product {
     use super::*;
 
     /// VENDOR LISTINGS UTILS
-    pub fn init_vendor_listings(ctx: Context<CreateVendorListing>) -> Result<()>{
-        init_vendor_listings_handler(ctx)
+    pub fn init_vendor_listings(ctx: Context<CreateVendorListing>, market_type: String) -> Result<()>{
+        init_vendor_listings_handler(ctx, market_type)
     }
 
     pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProduct) -> Result<()>{
@@ -39,10 +39,6 @@ pub mod orbit_product {
     }
     pub fn transfer_all_vendor_listings_ownership(ctx: Context<TransferAllOwner>) -> Result<()>{
         transfer_all_vendor_listings_ownership_handler(ctx)
-    }
-
-    pub fn vendor_force_change_ownership(ctx: Context<VendorForceChangeOwner>) -> Result<()>{
-        vendor_force_change_ownership_handler(ctx)
     }
 
     /// PRODUCT MODIFIERS

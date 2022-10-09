@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use market_accounts::{OrbitMarketAccount, AccountTransfer};
 use crate::{ListingsStruct, ProductErrors};
 
 #[derive(Accounts)]
@@ -10,35 +9,22 @@ pub struct CreateVendorListing<'info>{
         seeds = [
             b"vendor_listings",
             market_type.as_bytes(),
-            market_account.key().as_ref()
+            wallet.key().as_ref()
         ],
         bump,
         payer = wallet,
         space = 200
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
-
-    #[account(
-        seeds = [
-            b"orbit_account",
-            wallet.key().as_ref()
-        ],
-        bump,
-        seeds::program = market_accounts::ID
-    )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
     
-    #[account(
-        mut,
-        address = market_account.wallet
-    )]
+    #[account(mut)]
     pub wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>
 }
 
 // the idea here vendors can copy these old addresses into a new struct
-pub fn init_vendor_listings_handler(ctx: Context<CreateVendorListing>) -> Result<()>{
+pub fn init_vendor_listings_handler(ctx: Context<CreateVendorListing>, _market_type: String) -> Result<()>{
     ctx.accounts.vendor_listings.listings_owner = ctx.accounts.wallet.key();
     
     // all available addresses (unused)
@@ -104,33 +90,19 @@ pub fn mark_prod_unavailable_handler(vendor_listings: &mut Account<ListingsStruc
 
 #[derive(Accounts)]
 pub struct TransferOwner<'info>{
-    #[account(
-        mut,
-        constraint = vendor_listings.listings_owner == source_account.wallet
-    )]
-    pub vendor_listings: Box<Account<'info, ListingsStruct>>,
+    #[account(mut)]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    pub destination_wallet: SystemAccount<'info>,
 
     #[account(
-        address = transfer_struct.source
-    )]
-    pub source_account: Box<Account<'info, OrbitMarketAccount>>,
-
-    #[account(
-        address = transfer_struct.destination
-    )]
-    pub destination_account:Box<Account<'info, OrbitMarketAccount>>,
-    
-    pub transfer_struct: Account<'info, AccountTransfer>,
-
-    #[account(
-        address = source_account.wallet,
-        constraint = vendor_listings.listings_owner == wallet.key()
+        address = vendor_listings.listings_owner
     )]
     pub wallet: Signer<'info>
 }
 
 pub fn transfer_vendor_listings_ownership_handler(ctx: Context<TransferOwner>) -> Result<()>{
-    ctx.accounts.vendor_listings.listings_owner = ctx.accounts.destination_account.wallet;
+    ctx.accounts.vendor_listings.listings_owner = ctx.accounts.destination_wallet.key();
     Ok(())
 }
 
@@ -138,80 +110,30 @@ pub fn transfer_vendor_listings_ownership_handler(ctx: Context<TransferOwner>) -
 pub struct TransferAllOwner<'info>{
     #[account(
         mut,
-        seeds = [
-            b"listings_listings",
-            b"physical",
-            source_account.key().as_ref()
-        ],
-        bump,
-        constraint = physical_vendor_listings.listings_owner == source_account.wallet
+        has_one = listings_owner
     )]
     pub physical_vendor_listings:Box<Account<'info, ListingsStruct>>,
 
     #[account(
         mut,
-        seeds = [
-            b"listings_listings",
-            b"digital",
-            source_account.key().as_ref()
-        ],
-        bump,
-        constraint = digital_vendor_listings.listings_owner == source_account.wallet
+        has_one = listings_owner
     )]
     pub digital_vendor_listings:Box<Account<'info, ListingsStruct>>,
 
     #[account(
         mut,
-        seeds = [
-            b"listings_listings",
-            b"commission",
-            source_account.key().as_ref()
-        ],
-        bump,
-        constraint = commission_vendor_listings.listings_owner == source_account.wallet
+        has_one = listings_owner
     )]
     pub commission_vendor_listings:Box<Account<'info, ListingsStruct>>,
 
-    #[account(
-        address = transfer_struct.source
-    )]
-    pub source_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub destination_wallet: SystemAccount<'info>,
 
-    #[account(
-        address = transfer_struct.destination
-    )]
-    pub destination_account:Box<Account<'info, OrbitMarketAccount>>,
-    
-    pub transfer_struct: Account<'info, AccountTransfer>,
-
-    #[account(
-        address = source_account.wallet
-    )]
-    pub wallet: Signer<'info>
+    pub listings_owner: Signer<'info>
 }
 
 pub fn transfer_all_vendor_listings_ownership_handler(ctx: Context<TransferAllOwner>) -> Result<()>{
-    ctx.accounts.physical_vendor_listings.listings_owner = ctx.accounts.destination_account.wallet;
-    ctx.accounts.digital_vendor_listings.listings_owner = ctx.accounts.destination_account.wallet;
-    ctx.accounts.commission_vendor_listings.listings_owner = ctx.accounts.destination_account.wallet;
+    ctx.accounts.physical_vendor_listings.listings_owner = ctx.accounts.destination_wallet.key();
+    ctx.accounts.digital_vendor_listings.listings_owner = ctx.accounts.destination_wallet.key();
+    ctx.accounts.commission_vendor_listings.listings_owner = ctx.accounts.destination_wallet.key();
     Ok(())
 }
-
-#[derive(Accounts)]
-pub struct VendorForceChangeOwner<'info>{
-    #[account(
-        mut,
-        constraint = vendor_listings.listings_owner == wallet.key()
-    )]
-    pub vendor_listings:Box<Account<'info, ListingsStruct>>,
-
-    pub new_wallet: SystemAccount<'info>,
-    
-    pub wallet: Signer<'info>,
-}
-
-pub fn vendor_force_change_ownership_handler(ctx: Context<VendorForceChangeOwner>) -> Result<()>{
-    ctx.accounts.vendor_listings.listings_owner = ctx.accounts.new_wallet.key();
-    Ok(())
-}
-
