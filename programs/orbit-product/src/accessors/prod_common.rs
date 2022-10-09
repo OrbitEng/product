@@ -221,6 +221,7 @@ pub struct UnlistProduct<'info>{
         mut,
         constraint = *prod.owner == crate::ID
     )]
+    /// CHECK: we do owner check
     pub prod: AccountInfo<'info>,
 
     #[account(
