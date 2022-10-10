@@ -1,12 +1,12 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
-import { OrbitProduct } from "../target/types/orbit_product";
+import { OrbitProductStruct } from "../target/types/orbit_product";
 
 describe("orbit-product", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
-  const program = anchor.workspace.OrbitProduct as Program<OrbitProduct>;
+  const program = anchor.workspace.OrbitProductStruct as Program<OrbitProductStruct>;
 
   it("Is initialized!", async () => {
     // Add your test here.

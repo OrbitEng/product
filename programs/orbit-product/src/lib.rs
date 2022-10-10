@@ -21,15 +21,15 @@ pub mod orbit_product {
         init_vendor_listings_handler(ctx, market_type)
     }
 
-    pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProduct) -> Result<()>{
+    pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct) -> Result<()>{
         CommissionProduct::list(ctx, prod)
     }
     
-    pub fn list_digital_product(ctx: Context<ListDigitalProduct>, prod: OrbitProduct, file_type: DigitalFileTypes) -> Result<()>{
+    pub fn list_digital_product(ctx: Context<ListDigitalProduct>, prod: OrbitProductStruct, file_type: DigitalFileTypes) -> Result<()>{
         DigitalProduct::list(ctx, prod, file_type)
     }
 
-    pub fn list_physical_product(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct, quantity: u32) -> Result<()>{
+    pub fn list_physical_product(ctx: Context<ListPhysicalProduct>, prod: OrbitProductStruct, quantity: u32) -> Result<()>{
         PhysicalProduct::list(ctx, prod, quantity)
     }
     

@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 // borsh:    8 +  (1 + 43) | (32) | (8)  | (32) | (1) | 1 + 43
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct OrbitProduct{ // size 170
+pub struct OrbitProductStruct{ // size 170
     pub info: String, // 43 :0-52
     pub owner_catalog: Pubkey, // 32 : 52-84
     pub index: u8, // :84 - 85
@@ -16,7 +16,7 @@ pub struct OrbitProduct{ // size 170
 // disc b910f3a2 [185, 16, 243, 162, 235, 96, 85, 214]
 #[account]
 pub struct DigitalProduct{
-    pub metadata: OrbitProduct,
+    pub metadata: OrbitProductStruct,
     pub digital_file_type: DigitalFileTypes
 }
 
@@ -33,7 +33,7 @@ pub enum DigitalFileTypes{
 // disc a81c2d2c [168, 28, 45, 44, 211, 241, 238, 140]
 #[account]
 pub struct PhysicalProduct{
-    pub metadata: OrbitProduct, // 38 as of beta
+    pub metadata: OrbitProductStruct, // 38 as of beta
     pub quantity: u32, // quantity per purchase // 4
 }
 
@@ -41,5 +41,5 @@ pub struct PhysicalProduct{
 // disc ee26edf0 [238, 38, 237, 240, 132, 29, 235, 255]
 #[account]
 pub struct CommissionProduct{
-    pub metadata: OrbitProduct
+    pub metadata: OrbitProductStruct
 }

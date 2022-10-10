@@ -9,7 +9,7 @@ use crate::{
     DigitalProduct,
     CommissionProduct,
     ListingsStruct,
-    OrbitProduct,
+    OrbitProductStruct,
     RecentMarketListings,
     DigitalFileTypes,
 
@@ -23,7 +23,7 @@ use crate::{
 /// COMMISSION
 
 #[derive(Accounts)]
-#[instruction(prod_in: OrbitProduct)]
+#[instruction(prod_in: OrbitProductStruct)]
 pub struct ListCommissionProduct<'info>{
     
     #[account(
@@ -60,7 +60,7 @@ pub struct ListCommissionProduct<'info>{
 }
 
 impl CommissionProduct{
-    pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProduct)-> Result<()> {
+    pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
         ctx.accounts.commission_product.metadata = prod;
 
@@ -88,7 +88,7 @@ impl CommissionProduct{
 /// DIGITAL
 
 #[derive(Accounts)]
-#[instruction(prod_in: OrbitProduct)]
+#[instruction(prod_in: OrbitProductStruct)]
 pub struct ListDigitalProduct<'info>{
     
     #[account(
@@ -127,7 +127,7 @@ pub struct ListDigitalProduct<'info>{
 
 
 impl DigitalProduct{
-    pub fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProduct, file_type: DigitalFileTypes)-> Result<()> {
+    pub fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProductStruct, file_type: DigitalFileTypes)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
         ctx.accounts.digital_product.metadata = prod;
@@ -156,7 +156,7 @@ impl DigitalProduct{
 /// PHYSICAL
 
 #[derive(Accounts)]
-#[instruction(prod_in: OrbitProduct)]
+#[instruction(prod_in: OrbitProductStruct)]
 pub struct ListPhysicalProduct<'info>{
 
     #[account(
@@ -187,7 +187,7 @@ pub struct ListPhysicalProduct<'info>{
 
 
 impl PhysicalProduct{
-    pub fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProduct, quantity: u32) -> Result<()>{
+    pub fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProductStruct, quantity: u32) -> Result<()>{
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
         ctx.accounts.phys_product.metadata = prod;
