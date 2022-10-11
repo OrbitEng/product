@@ -3,6 +3,11 @@ use anchor_lang::{
     solana_program::system_program, Discriminator
 };
 use orbit_derive_product::CommonProdUtils;
+use orbit_addresses::{
+    PHYSICAL_ADDRESS,
+    DIGITAL_ADDRESS,
+    COMMISSION_ADDRESS
+};
 
 use crate::{
     PhysicalProduct,
@@ -118,7 +123,7 @@ pub struct ListDigitalProduct<'info>{
     #[account(
         mut,
         seeds = [
-            b"recent_catalog"
+            b"recent_listings"
         ],
         bump
     )]
@@ -276,10 +281,55 @@ pub struct UpdateProductField<'info>{
     pub seller_wallet: Signer<'info>,
 }
 
+#[derive(Accounts)]
+pub struct UpdateProductFieldInternal<'info>{
+    #[account(
+        mut,
+        owner = crate::ID,
+        constraint = product.data_len() == 250
+    )]
+    /// CHECK: we check the program owns it
+    pub product: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        constraint = product.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        constraint = 
+            (caller.key().to_bytes() == PHYSICAL_ADDRESS) ||
+            (caller.key().to_bytes() == DIGITAL_ADDRESS) ||
+            (caller.key().to_bytes() == COMMISSION_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
 ///////////////////////
 /// PHYS ONLY
 
 pub fn update_quantity_handler(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
+    let mut phys_prod = Account::<PhysicalProduct>::try_from(&ctx.accounts.product)?;
+    phys_prod.quantity = qnt;
+    if qnt == 0{
+        mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, phys_prod.metadata.index)?;
+    }
+    phys_prod.exit(&crate::ID)
+}
+
+pub fn update_quantity_internal_handler(ctx: Context<UpdateProductFieldInternal>, qnt: u32) -> Result<()>{
     let mut phys_prod = Account::<PhysicalProduct>::try_from(&ctx.accounts.product)?;
     phys_prod.quantity = qnt;
     if qnt == 0{

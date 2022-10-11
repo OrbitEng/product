@@ -51,31 +51,6 @@ pub struct InitMarketRecentListings<'info>{
     pub system_program: Program<'info, System>
 }
 
-// #[derive(Accounts)]
-// pub struct EditModCatalog<'info>{
-//     #[account(
-//         mut,
-//         seeds = [
-//             b"recent_listings",
-//             (product.try_borrow_data()?)[0..8].as_ref()
-//         ],
-//         bump,
-//     )]
-//     pub catalog: Box<Account<'info, RecentMarketListings>>,
-
-//     #[account(
-//         constraint = *product.owner == crate::ID,
-//         constraint = {
-//             let dat = &(product.try_borrow_data()?)[0..8];
-//             (dat == PhysicalProduct::discriminator()) ||
-//             (dat == DigitalProduct::discriminator()) ||
-//             (dat == CommissionProduct::discriminator())
-//         }
-//     )]
-//     /// CHECK: base checks done
-//     pub product: AccountInfo<'info>
-// }
-
 pub fn init_recent_listings_handler(_ctx: Context<InitMarketRecentListings>) -> Result<()>{
     Ok(())
 }

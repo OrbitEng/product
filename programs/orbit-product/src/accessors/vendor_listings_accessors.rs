@@ -112,19 +112,19 @@ pub struct TransferAllOwner<'info>{
         mut,
         has_one = listings_owner
     )]
-    pub physical_vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub physical_vendor_listings: Box<Account<'info, ListingsStruct>>,
 
     #[account(
         mut,
         has_one = listings_owner
     )]
-    pub digital_vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub digital_vendor_listings: Box<Account<'info, ListingsStruct>>,
 
     #[account(
         mut,
         has_one = listings_owner
     )]
-    pub commission_vendor_listings:Box<Account<'info, ListingsStruct>>,
+    pub commission_vendor_listings: Box<Account<'info, ListingsStruct>>,
 
     pub destination_wallet: SystemAccount<'info>,
 
