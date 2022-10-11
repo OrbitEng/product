@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-orbit_product = "DpKqMhUHc6YDjzGmxEKGZK8MxpdtW9X6jmYZrJ9UZj4g"
+orbit_product = "97yvrxpWXrsurDgiWiskJ4KcQhFZJF6SrLoUYA53bpBL"
 
 [registry]
 url = "https://api.apr.dev"

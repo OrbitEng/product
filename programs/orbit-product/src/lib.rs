@@ -10,7 +10,7 @@ pub use accessors::*;
 pub use structs::*;
 pub use errors::*;
 
-declare_id!("DpKqMhUHc6YDjzGmxEKGZK8MxpdtW9X6jmYZrJ9UZj4g");
+declare_id!("97yvrxpWXrsurDgiWiskJ4KcQhFZJF6SrLoUYA53bpBL");
 
 #[program]
 pub mod orbit_product {
