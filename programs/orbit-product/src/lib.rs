@@ -68,6 +68,10 @@ pub mod orbit_product {
         update_quantity_handler(ctx, qnt)
     }
 
+    pub fn update_product_quantity_internal(ctx: Context<UpdateProductFieldInternal>, qnt: u32) -> Result<()>{
+        update_quantity_internal_handler(ctx, qnt)
+    }
+
     /// DIGITAL
     
     pub fn set_file_type(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
