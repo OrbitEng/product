@@ -54,14 +54,6 @@ pub struct ListCommissionProduct<'info>{
     pub seller_wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>,
-
-    #[account(
-        seeds = [
-            b"market_auth"
-        ],
-        bump
-    )]
-    pub market_auth: SystemAccount<'info>
 }
 
 impl CommissionProduct{
@@ -118,16 +110,7 @@ pub struct ListDigitalProduct<'info>{
     )]
     pub seller_wallet: Signer<'info>,
 
-    pub system_program: Program<'info, System>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"recent_listings"
-        ],
-        bump
-    )]
-    pub recent_catalog: Box<Account<'info, RecentMarketListings>>,
+    pub system_program: Program<'info, System>
 }
 
 
