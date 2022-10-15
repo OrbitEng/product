@@ -14,7 +14,13 @@ declare_id!("97yvrxpWXrsurDgiWiskJ4KcQhFZJF6SrLoUYA53bpBL");
 
 #[program]
 pub mod orbit_product {
+
     use super::*;
+
+    /// INIT
+    pub fn init_recent_listings(ctx: Context<InitMarketRecentListings>) -> Result<()>{
+        init_recent_listings_handler(ctx)
+    }
 
     /// VENDOR LISTINGS UTILS
     pub fn init_vendor_listings(ctx: Context<CreateVendorListing>, market_type: String) -> Result<()>{
