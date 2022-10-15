@@ -19,7 +19,7 @@ pub struct InitMarketRecentListings<'info>{
         bump,
         payer = payer
     )]
-    pub physical_recent_listings: Account<'info, RecentMarketListings>,
+    pub physical_recent_listings: Box<Account<'info, RecentMarketListings>>,
 
     #[account(
         init,
@@ -31,7 +31,7 @@ pub struct InitMarketRecentListings<'info>{
         bump,
         payer = payer
     )]
-    pub digital_recent_listings: Account<'info, RecentMarketListings>,
+    pub digital_recent_listings: Box<Account<'info, RecentMarketListings>>,
 
     #[account(
         init,
@@ -43,7 +43,7 @@ pub struct InitMarketRecentListings<'info>{
         bump,
         payer = payer
     )]
-    pub commission_recent_listings: Account<'info, RecentMarketListings>,
+    pub commission_recent_listings: Box<Account<'info, RecentMarketListings>>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
