@@ -1,6 +1,6 @@
 use anchor_lang::{
     prelude::*,
-    solana_program::system_program, Discriminator
+    solana_program::system_program
 };
 use orbit_derive_product::CommonProdUtils;
 use orbit_addresses::{
@@ -63,8 +63,8 @@ impl CommissionProduct{
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
-                b"recent_listings",
-                CommissionProduct::discriminator().as_ref()
+                b"recent_listings".as_ref(),
+                b"commission".as_ref()
             ], 
             &crate::ID);
 
@@ -123,8 +123,8 @@ impl DigitalProduct{
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
-                b"recent_listings",
-                DigitalProduct::discriminator().as_ref()
+                b"recent_listings".as_ref(),
+                b"digital".as_ref()
             ], 
             &crate::ID);
 
@@ -183,8 +183,8 @@ impl PhysicalProduct{
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
-                b"recent_listings",
-                PhysicalProduct::discriminator().as_ref()
+                b"recent_listings".as_ref(),
+                b"physical".as_ref()
             ], 
             &crate::ID);
 

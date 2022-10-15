@@ -1,10 +1,7 @@
-use anchor_lang::{prelude::*, Discriminator};
+use anchor_lang::prelude::*;
 
 use crate::{
-    RecentMarketListings,
-    PhysicalProduct,
-    DigitalProduct,
-    CommissionProduct
+    RecentMarketListings
 };
 
 #[derive(Accounts)]
@@ -13,8 +10,8 @@ pub struct InitMarketRecentListings<'info>{
         init,
         space = 1000,
         seeds = [
-            b"recent_listings",
-            (PhysicalProduct::discriminator()).as_ref()
+            b"recent_listings".as_ref(),
+            b"physical".as_ref()
         ],
         bump,
         payer = payer
@@ -25,8 +22,8 @@ pub struct InitMarketRecentListings<'info>{
         init,
         space = 1000,
         seeds = [
-            b"recent_listings",
-            (DigitalProduct::discriminator()).as_ref()
+            b"recent_listings".as_ref(),
+            b"digital".as_ref()
         ],
         bump,
         payer = payer
@@ -37,8 +34,8 @@ pub struct InitMarketRecentListings<'info>{
         init,
         space = 1000,
         seeds = [
-            b"recent_listings",
-            (CommissionProduct::discriminator()).as_ref()
+            b"recent_listings".as_ref(),
+            b"commission".as_ref()
         ],
         bump,
         payer = payer
