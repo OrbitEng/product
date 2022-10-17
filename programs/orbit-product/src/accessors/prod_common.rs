@@ -213,6 +213,7 @@ pub struct UnlistProduct<'info>{
     pub prod: AccountInfo<'info>,
 
     #[account(
+        mut,
         constraint = prod.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,

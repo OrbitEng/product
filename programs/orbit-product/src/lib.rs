@@ -38,6 +38,10 @@ pub mod orbit_product {
     pub fn list_physical_product(ctx: Context<ListPhysicalProduct>, prod: OrbitProductStruct, quantity: u32) -> Result<()>{
         PhysicalProduct::list(ctx, prod, quantity)
     }
+
+    pub fn unlist_product(ctx: Context<UnlistProduct>) -> Result<()>{
+        unlist(ctx)
+    }
     
     /// OWNERSHIP TRANSFER
     pub fn transfer_vendor_listings_ownership(ctx: Context<TransferOwner>) -> Result<()>{
