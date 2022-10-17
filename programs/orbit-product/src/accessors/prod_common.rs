@@ -214,7 +214,7 @@ pub struct UnlistProduct<'info>{
 
     #[account(
         mut,
-        constraint = prod.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
+        constraint = prod.try_borrow_data()?[55..87] == vendor_listings.key().to_bytes()
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 
@@ -254,7 +254,7 @@ pub struct UpdateProductField<'info>{
 
     #[account(
         mut,
-        constraint = product.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
+        constraint = product.try_borrow_data()?[55..87] == vendor_listings.key().to_bytes()
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 
@@ -277,7 +277,7 @@ pub struct UpdateProductFieldInternal<'info>{
 
     #[account(
         mut,
-        constraint = product.try_borrow_data()?[52..84] == vendor_listings.key().to_bytes()
+        constraint = product.try_borrow_data()?[55..87] == vendor_listings.key().to_bytes()
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 

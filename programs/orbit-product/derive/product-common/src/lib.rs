@@ -57,11 +57,11 @@ pub fn derive_common_prod_utils(item: TokenStream) -> TokenStream{
         }
 
         pub fn mark_available_handler(ctx: Context< #name >) -> Result<()>{
-            mark_prod_available_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[84])
+            mark_prod_available_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[87])
         }
 
         pub fn mark_unavailable_handler(ctx: Context< #name >) -> Result<()>{
-            mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[84])
+            mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[87])
         }
     };
 
