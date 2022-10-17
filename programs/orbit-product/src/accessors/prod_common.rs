@@ -330,3 +330,26 @@ pub fn set_file_type_handler(ctx: Context<UpdateProductField>, file_type: Digita
     digital_prod.digital_file_type = file_type;
     digital_prod.exit(&crate::ID)
 }
+
+
+///////////////////////////////////////
+/// EMERGENCY FUCKUP USE ONLY
+
+#[derive(Accounts)]
+pub struct FlushListings<'info>{
+    #[account(
+        mut
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        mut,
+        address = vendor_listings.listings_owner
+    )]
+    pub seller_wallet: Signer<'info>
+}
+
+pub fn flush_listings_handler(ctx: Context<FlushListings>) -> Result<()>{
+    ctx.accounts.vendor_listings.address_available = [u64::MAX,u64::MAX,u64::MAX,u64::MAX];
+    Ok(())
+}

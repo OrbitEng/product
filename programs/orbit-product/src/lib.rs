@@ -87,4 +87,9 @@ pub mod orbit_product {
     pub fn set_file_type(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
         set_file_type_handler(ctx, file_type)
     }
+
+    // pub fn flush_listings(ctx: Context<FlushListings>) -> Result<()>{
+    //     flush_listings_handler(ctx)
+    // }
+
 }
