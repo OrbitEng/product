@@ -3,13 +3,13 @@ use anchor_lang::prelude::*;
 // borsh:    8 +  (4 + 43) | (32) | (8)  | (32) | (1) | 4 + 43
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
 pub struct OrbitProductStruct{ // size 170 :0-8
-    pub info: String, // 43 :8-55
+    pub info: String, // 43 :8-12-55
     pub owner_catalog: Pubkey, // 32 : 55-87
     pub index: u8, // :87 - 88
     pub currency: Pubkey, // 32 :88 - 120
     pub price: u64, // 8 : 120 - 128
     pub delivery_estimate: u8, // rough delivery ETA :128-129
-    pub media: String // :129-176
+    pub media: String // :129-133-176
 }
 
 /// DIGITAL

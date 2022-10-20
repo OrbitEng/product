@@ -27,7 +27,7 @@ pub fn derive_common_prod_utils(item: TokenStream) -> TokenStream{
             let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
             let price_vec = price.to_le_bytes();
             for i in 0..8{
-                mut_data[117+i] = price_vec[i];
+                mut_data[120+i] = price_vec[i];
             }
             ctx.accounts.#field_name.exit(&crate::ID)
         }
@@ -35,23 +35,37 @@ pub fn derive_common_prod_utils(item: TokenStream) -> TokenStream{
         pub fn update_currency_handler(ctx: Context< #name >, currency: Pubkey) -> Result<()>{
             let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
             for (ind, byte_val) in currency.to_bytes().iter().enumerate(){
-                mut_data[85+ind] = *byte_val;
+                mut_data[88+ind] = *byte_val;
             };
             ctx.accounts.#field_name.exit(&crate::ID)
         }
         
         pub fn update_media_handler(ctx: Context< #name >, link: String) -> Result<()>{
             let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
+            if link.len() != 43{
+                return err!(ProductErrors::InvalidParameter);
+            }
+            mut_data[129] = 43;
+            mut_data[130] = 0;
+            mut_data[131] = 0;
+            mut_data[132] = 0;
             for (ind, byte_val) in link.as_bytes().iter().enumerate(){
-                mut_data[127+ind] = *byte_val;
+                mut_data[133+ind] = *byte_val;
             };
             ctx.accounts.#field_name.exit(&crate::ID)
         }
         
         pub fn update_info_handler(ctx: Context< #name >, info: String) -> Result<()>{
             let mut mut_data = ctx.accounts.#field_name.try_borrow_mut_data()?;
+            if info.len() != 43{
+                return err!(ProductErrors::InvalidParameter);
+            }
+            mut_data[8] = 43;
+            mut_data[9] = 0;
+            mut_data[10] = 0;
+            mut_data[11] = 0;
             for (ind, byte_val) in info.as_bytes().iter().enumerate(){
-                mut_data[9+ind] = *byte_val;
+                mut_data[12+ind] = *byte_val;
             };
             ctx.accounts.#field_name.exit(&crate::ID)
         }

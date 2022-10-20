@@ -5,5 +5,7 @@ pub enum ProductErrors{
     #[msg("requested PDA is unavailable")]
     AddressUnavailable,
     #[msg("given address is not a recent catalog")]
-    InvalidCatalogType
+    InvalidCatalogType,
+    #[msg("invalid parameter")]
+    InvalidParameter
 }
