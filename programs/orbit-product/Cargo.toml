@@ -17,5 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.25.0"
-orbit-derive-product = {path = "./derive/product-common"}
 orbit-addresses = {git = "https://github.com/OrbitEng/addresses"}

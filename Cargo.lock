@@ -818,20 +818,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "orbit-derive-product"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn",
-]
-
-[[package]]
 name = "orbit-product"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
- "orbit-derive-product",
 ]
 
 [[package]]

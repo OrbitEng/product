@@ -6,10 +6,9 @@ pub struct OrbitProductStruct{ // size 170 :0-8
     pub info: String, // 43 :8-12-55
     pub owner_catalog: Pubkey, // 32 : 55-87
     pub index: u8, // :87 - 88
-    pub currency: Pubkey, // 32 :88 - 120
-    pub price: u64, // 8 : 120 - 128
-    pub delivery_estimate: u8, // rough delivery ETA :128-129
-    pub media: String // :129-133-176
+    pub price: u64, // 8 : 88 - 96
+    pub delivery_estimate: u8, // rough delivery ETA :96-97
+    pub media: String // :97-101-144
 }
 
 /// DIGITAL

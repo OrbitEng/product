@@ -1,7 +1,5 @@
 use anchor_lang::prelude::*;
 
-pub use orbit_derive_product::CommonProdUtils;
-
 pub mod accessors;
 pub mod structs;
 pub mod errors;
@@ -63,11 +61,11 @@ pub mod orbit_product {
     pub fn update_product_price(ctx: Context<UpdateProductField>, price: u64) -> Result<()>{
         update_price_handler(ctx, price)
     }
-    pub fn update_currency(ctx: Context<UpdateProductField>, currency: Pubkey) -> Result<()>{
-        update_currency_handler(ctx, currency)
-    }
     pub fn set_media(ctx: Context<UpdateProductField>, link: String) -> Result<()>{
         update_media_handler(ctx, link)
+    }
+    pub fn update_delivery_estimate(ctx: Context<UpdateProductField>, delivery_estimate: u8) -> Result<()>{
+        update_delivery_estimate_handler(ctx, delivery_estimate)
     }
     pub fn set_prod_info(ctx: Context<UpdateProductField>, info: String) -> Result<()>{
         update_info_handler(ctx, info)

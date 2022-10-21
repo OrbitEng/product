@@ -2,7 +2,6 @@ use anchor_lang::{
     prelude::*,
     solana_program::system_program
 };
-use orbit_derive_product::CommonProdUtils;
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
     DIGITAL_ADDRESS,
@@ -247,7 +246,7 @@ pub fn unlist(ctx: Context<UnlistProduct>) -> Result<()>{
 }
 
 
-#[derive(Accounts, CommonProdUtils)]
+#[derive(Accounts)]
 pub struct UpdateProductField<'info>{
     #[account(
         mut,
@@ -268,6 +267,59 @@ pub struct UpdateProductField<'info>{
         address = vendor_listings.listings_owner
     )]
     pub seller_wallet: Signer<'info>,
+}
+
+pub fn update_info_handler(ctx: Context<UpdateProductField>, info: String) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    if info.len() != 43{
+        return err!(ProductErrors::InvalidParameter);
+    }
+    mut_data[8] = 43;
+    mut_data[9] = 0;
+    mut_data[10] = 0;
+    mut_data[11] = 0;
+    for (ind, byte_val) in info.as_bytes().iter().enumerate(){
+        mut_data[12+ind] = *byte_val;
+    };
+    ctx.accounts.product.exit(&crate::ID)
+}
+
+pub fn update_price_handler(ctx: Context<UpdateProductField>, price: u64) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    let price_vec = price.to_le_bytes();
+    for i in 0..8{
+        mut_data[88+i] = price_vec[i];
+    }
+    ctx.accounts.product.exit(&crate::ID)
+}
+
+pub fn update_delivery_estimate_handler(ctx: Context<UpdateProductField>, delivery_estimate: u8) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    mut_data[96] = delivery_estimate;
+    ctx.accounts.product.exit(&crate::ID)
+}
+
+pub fn update_media_handler(ctx: Context<UpdateProductField>, link: String) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    if link.len() != 43{
+        return err!(ProductErrors::InvalidParameter);
+    }
+    mut_data[97] = 43;
+    mut_data[98] = 0;
+    mut_data[99] = 0;
+    mut_data[100] = 0;
+    for (ind, byte_val) in link.as_bytes().iter().enumerate(){
+        mut_data[100+ind] = *byte_val;
+    };
+    ctx.accounts.product.exit(&crate::ID)
+}
+
+pub fn mark_available_handler(ctx: Context<UpdateProductField>) -> Result<()>{
+    mark_prod_available_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[87])
+}
+
+pub fn mark_unavailable_handler(ctx: Context<UpdateProductField>) -> Result<()>{
+    mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[87])
 }
 
 #[derive(Accounts)]
