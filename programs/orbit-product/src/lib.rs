@@ -88,8 +88,8 @@ pub mod orbit_product {
         set_file_type_handler(ctx, file_type)
     }
 
-    // pub fn flush_listings(ctx: Context<FlushListings>) -> Result<()>{
-    //     flush_listings_handler(ctx)
-    // }
+    pub fn flush_listings(ctx: Context<FlushListings>) -> Result<()>{
+        flush_listings_handler(ctx)
+    }
 
 }
