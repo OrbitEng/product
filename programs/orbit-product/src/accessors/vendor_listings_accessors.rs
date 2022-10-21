@@ -60,15 +60,6 @@ pub fn list_product_handler(vendor_listings: &mut Account<ListingsStruct>, listi
     Ok(())
 }
 
-pub fn unlist_product_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
-    let avail_ind = 1<<(listings_index%64);
-    let outer_ind = listings_index/64;
-    
-    vendor_listings.address_available[outer_ind as usize] |= avail_ind;
-    vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
-    Ok(())
-}
-
 pub fn mark_prod_available_handler(vendor_listings: &mut Account<ListingsStruct>, listings_index: u8) -> Result<()>{
     let avail_ind = 1<<(listings_index%64);
     let outer_ind = listings_index/64;

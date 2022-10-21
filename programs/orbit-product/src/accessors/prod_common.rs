@@ -19,7 +19,6 @@ use crate::{
     DigitalFileTypes,
 
     list_product_handler,
-    unlist_product_handler,
     mark_prod_available_handler,
     mark_prod_unavailable_handler, ProductErrors, edit_recent_listings_handler,
 };
@@ -228,7 +227,13 @@ pub struct UnlistProduct<'info>{
 pub fn unlist(ctx: Context<UnlistProduct>) -> Result<()>{
     //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
 
-    unlist_product_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.prod.try_borrow_data()?[84])?;
+    let listings_index = ctx.accounts.prod.try_borrow_data()?[87];
+
+    let avail_ind = 1<<(listings_index%64);
+    let outer_ind = listings_index/64;
+    
+    ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+    ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
 
     let info = &ctx.accounts.prod;
     let sol_destination = ctx.accounts.seller_wallet.to_account_info();
