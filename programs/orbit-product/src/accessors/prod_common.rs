@@ -1,11 +1,11 @@
 use anchor_lang::{
-    prelude::*,
-    solana_program::system_program
+    prelude::*
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
     DIGITAL_ADDRESS,
-    COMMISSION_ADDRESS
+    COMMISSION_ADDRESS,
+    SEARCH_ADDRESS
 };
 
 use crate::{
@@ -54,6 +54,29 @@ pub struct ListCommissionProduct<'info>{
     pub system_program: Program<'info, System>,
 }
 
+
+
+#[derive(Accounts)]
+pub struct UnlistCommissionProduct<'info>{
+    #[account(
+        mut,
+        close = seller_wallet
+    )]
+    pub prod: Account<'info, CommissionProduct>,
+
+    #[account(
+        mut,
+        address = prod.metadata.owner_catalog
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        mut,
+        address = vendor_listings.listings_owner
+    )]
+    pub seller_wallet: Signer<'info>
+}
+
 impl CommissionProduct{
     pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
@@ -75,6 +98,20 @@ impl CommissionProduct{
             recent_catalog.exit(&crate::ID)?;
         }
         Ok(())    
+    }
+
+    pub fn unlist(ctx: Context<UnlistCommissionProduct>) -> Result<()>{
+        //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
+
+        let listings_index = ctx.accounts.prod.metadata.index;
+
+        let avail_ind = 1<<(listings_index%64);
+        let outer_ind = listings_index/64;
+        
+        ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+        ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+        
+        Ok(())
     }
 }
 
@@ -112,6 +149,30 @@ pub struct ListDigitalProduct<'info>{
 }
 
 
+
+#[derive(Accounts)]
+pub struct UnlistDigitalProduct<'info>{
+    #[account(
+        mut,
+        close = seller_wallet
+    )]
+    /// CHECK: we do owner check
+    pub prod: Account<'info, DigitalProduct>,
+
+    #[account(
+        mut,
+        address = prod.metadata.owner_catalog
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        mut,
+        address = vendor_listings.listings_owner
+    )]
+    pub seller_wallet: Signer<'info>
+}
+
+
 impl DigitalProduct{
     pub fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProductStruct, file_type: DigitalFileTypes)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
@@ -134,6 +195,20 @@ impl DigitalProduct{
             edit_recent_listings_handler(recent_catalog, ctx.accounts.digital_product.to_account_info())?;
             recent_catalog.exit(&crate::ID)?;
         }
+        Ok(())
+    }
+
+    pub fn unlist(ctx: Context<UnlistDigitalProduct>) -> Result<()>{
+        //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
+
+        let listings_index = ctx.accounts.prod.metadata.index;
+
+        let avail_ind = 1<<(listings_index%64);
+        let outer_ind = listings_index/64;
+        
+        ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+        ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+        
         Ok(())
     }
 }
@@ -171,6 +246,27 @@ pub struct ListPhysicalProduct<'info>{
     pub system_program: Program<'info, System>
 }
 
+#[derive(Accounts)]
+pub struct UnlistPhysicalProduct<'info>{
+    #[account(
+        mut,
+        close = seller_wallet
+    )]
+    /// CHECK: we do owner check
+    pub prod: Account<'info, PhysicalProduct>,
+
+    #[account(
+        mut,
+        address = prod.metadata.owner_catalog
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        mut,
+        address = vendor_listings.listings_owner
+    )]
+    pub seller_wallet: Signer<'info>
+}
 
 impl PhysicalProduct{
     pub fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProductStruct, quantity: u32) -> Result<()>{
@@ -196,55 +292,26 @@ impl PhysicalProduct{
         }
         Ok(())
     }
+
+    
+    pub fn unlist(ctx: Context<UnlistPhysicalProduct>) -> Result<()>{
+        //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
+
+        let listings_index = ctx.accounts.prod.metadata.index;
+
+        let avail_ind = 1<<(listings_index%64);
+        let outer_ind = listings_index/64;
+        
+        ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+        ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+        
+        Ok(())
+    }
+
 }
 
 ////////////////////////////////////////////
 /// GENERAL
-
-#[derive(Accounts)]
-pub struct UnlistProduct<'info>{
-    #[account(
-        mut,
-        owner = crate::ID
-    )]
-    /// CHECK: we do owner check
-    pub prod: AccountInfo<'info>,
-
-    #[account(
-        mut,
-        constraint = prod.try_borrow_data()?[55..87] == vendor_listings.key().to_bytes()
-    )]
-    pub vendor_listings: Account<'info, ListingsStruct>,
-
-    #[account(
-        mut,
-        address = vendor_listings.listings_owner
-    )]
-    pub seller_wallet: Signer<'info>
-}
-
-pub fn unlist(ctx: Context<UnlistProduct>) -> Result<()>{
-    //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
-
-    let listings_index = ctx.accounts.prod.try_borrow_data()?[87];
-
-    let avail_ind = 1<<(listings_index%64);
-    let outer_ind = listings_index/64;
-    
-    ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
-    ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
-
-    let info = &ctx.accounts.prod;
-    let sol_destination = ctx.accounts.seller_wallet.to_account_info();
-    let dest_starting_lamports = sol_destination.lamports();
-    **sol_destination.lamports.borrow_mut() =
-        dest_starting_lamports.checked_add(info.lamports()).unwrap();
-    **info.lamports.borrow_mut() = 0;
-
-    info.assign(&system_program::ID);
-    info.realloc(0, false).map_err(Into::into)
-}
-
 
 #[derive(Accounts)]
 pub struct UpdateProductField<'info>{
@@ -274,22 +341,14 @@ pub fn update_info_handler(ctx: Context<UpdateProductField>, info: String) -> Re
     if info.len() != 43{
         return err!(ProductErrors::InvalidParameter);
     }
-    mut_data[8] = 43;
-    mut_data[9] = 0;
-    mut_data[10] = 0;
-    mut_data[11] = 0;
-    for (ind, byte_val) in info.as_bytes().iter().enumerate(){
-        mut_data[12+ind] = *byte_val;
-    };
+    let inf_ser = info.try_to_vec()?;
+    mut_data[8..inf_ser.len()+8].copy_from_slice(&inf_ser);
     ctx.accounts.product.exit(&crate::ID)
 }
 
 pub fn update_price_handler(ctx: Context<UpdateProductField>, price: u64) -> Result<()>{
     let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
-    let price_vec = price.to_le_bytes();
-    for i in 0..8{
-        mut_data[88+i] = price_vec[i];
-    }
+    mut_data[88..96].copy_from_slice(&price.try_to_vec()?);
     ctx.accounts.product.exit(&crate::ID)
 }
 
@@ -304,13 +363,8 @@ pub fn update_media_handler(ctx: Context<UpdateProductField>, link: String) -> R
     if link.len() != 43{
         return err!(ProductErrors::InvalidParameter);
     }
-    mut_data[97] = 43;
-    mut_data[98] = 0;
-    mut_data[99] = 0;
-    mut_data[100] = 0;
-    for (ind, byte_val) in link.as_bytes().iter().enumerate(){
-        mut_data[100+ind] = *byte_val;
-    };
+    let link_ser = link.try_to_vec()?;
+    mut_data[97..link_ser.len()+97].copy_from_slice(&link_ser);
     ctx.accounts.product.exit(&crate::ID)
 }
 
@@ -320,6 +374,12 @@ pub fn mark_available_handler(ctx: Context<UpdateProductField>) -> Result<()>{
 
 pub fn mark_unavailable_handler(ctx: Context<UpdateProductField>) -> Result<()>{
     mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.try_borrow_data()?[87])
+}
+
+pub fn mark_searchable_handler(ctx: Context<UpdateProductField>, ref_bump: u8) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    mut_data[144] = ref_bump;
+    ctx.accounts.product.exit(&crate::ID)
 }
 
 #[derive(Accounts)]
@@ -386,6 +446,49 @@ pub fn set_file_type_handler(ctx: Context<UpdateProductField>, file_type: Digita
     let mut digital_prod = Account::<DigitalProduct>::try_from(&ctx.accounts.product)?;
     digital_prod.digital_file_type = file_type;
     digital_prod.exit(&crate::ID)
+}
+
+/////////////////////////////////
+/// SEARCH CPI
+
+#[derive(Accounts)]
+pub struct SearchSetting<'info>{
+    #[account(
+        mut,
+        owner = crate::ID,
+        constraint = product.data_len() == 250
+    )]
+    /// CHECK: we check the program owns it
+    pub product: AccountInfo<'info>,
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        constraint = 
+            (caller.key().to_bytes() == SEARCH_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
+pub fn set_searchable_handler(ctx: Context<SearchSetting>, bucket_number: u8) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    mut_data[144] = bucket_number;
+    ctx.accounts.product.exit(&crate::id())
+}
+
+pub fn set_unsearchable_handler(ctx: Context<SearchSetting>, bucket_number: u8) -> Result<()>{
+    let mut mut_data = ctx.accounts.product.try_borrow_mut_data()?;
+    mut_data[144] = bucket_number;
+    ctx.accounts.product.exit(&crate::id())
 }
 
 

@@ -37,8 +37,16 @@ pub mod orbit_product {
         PhysicalProduct::list(ctx, prod, quantity)
     }
 
-    pub fn unlist_product(ctx: Context<UnlistProduct>) -> Result<()>{
-        unlist(ctx)
+    pub fn unlist_commission_product(ctx: Context<UnlistCommissionProduct>) -> Result<()>{
+        CommissionProduct::unlist(ctx)
+    }
+    
+    pub fn unlist_digital_product(ctx: Context<UnlistDigitalProduct>) -> Result<()>{
+        DigitalProduct::unlist(ctx)
+    }
+
+    pub fn unlist_physical_product(ctx: Context<UnlistPhysicalProduct>) -> Result<()>{
+        PhysicalProduct::unlist(ctx)
     }
     
     /// OWNERSHIP TRANSFER
