@@ -780,7 +780,7 @@ dependencies = [
 [[package]]
 name = "market-accounts"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/accounts#bfa1e70627d1bbfedefd9f461f015c5c6385a3a9"
+source = "git+https://github.com/OrbitEng/accounts#cac8777b3b787e2a6fee1736784a28b2e5a48958"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
