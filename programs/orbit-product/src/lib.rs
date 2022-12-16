@@ -21,9 +21,19 @@ pub mod orbit_product {
     }
 
     /// VENDOR LISTINGS UTILS
-    pub fn init_vendor_listings(ctx: Context<CreateVendorListing>, market_type: String) -> Result<()>{
-        init_vendor_listings_handler(ctx, market_type)
+    pub fn init_commissions_listings(ctx: Context<CreateCommissionsListing>) -> Result<()>{
+        init_commissions_listings_handler(ctx)
     }
+
+    pub fn init_digital_listings(ctx: Context<CreateDigitalListing>) -> Result<()>{
+        init_digital_listings_handler(ctx)
+    }
+
+    pub fn init_physical_listings(ctx: Context<CreatePhysicalListings>) -> Result<()>{
+        init_physical_listings_handler(ctx)
+    }
+
+    // PRODUCT UTILS
 
     pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct) -> Result<()>{
         CommissionProduct::list(ctx, prod)

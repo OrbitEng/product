@@ -1,6 +1,7 @@
 use anchor_lang::{
     prelude::*
 };
+use market_accounts::OrbitMarketAccount;
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
     DIGITAL_ADDRESS,
@@ -19,7 +20,7 @@ use crate::{
 
     list_product_handler,
     mark_prod_available_handler,
-    mark_prod_unavailable_handler, ProductErrors, edit_recent_listings_handler,
+    mark_prod_unavailable_handler, ProductErrors, edit_recent_listings_handler, ListingsType,
 };
 
 /////////////////////////////////////////
@@ -32,24 +33,35 @@ pub struct ListCommissionProduct<'info>{
     #[account(
         init,
         space = 250,
-        payer = seller_wallet,
+        payer = wallet,
         seeds = [
             b"commission_product",
             vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
-        bump
+        bump,
+        constraint = prod_in.owner_catalog == vendor_account.voter_id
     )]
-    pub commission_product: Account<'info, CommissionProduct>,
-
-    #[account(mut)]
-    pub vendor_listings: Account<'info, ListingsStruct>,
+    pub prod: Account<'info, CommissionProduct>,
 
     #[account(
         mut,
-        address = vendor_listings.listings_owner
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
-    pub seller_wallet: Signer<'info>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        has_one = wallet
+    )]
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(mut)]
+    pub wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>,
 }
@@ -60,27 +72,37 @@ pub struct ListCommissionProduct<'info>{
 pub struct UnlistCommissionProduct<'info>{
     #[account(
         mut,
-        close = seller_wallet
+        constraint = prod.metadata.owner_catalog == vendor_account.voter_id,
+        close = wallet
     )]
     pub prod: Account<'info, CommissionProduct>,
 
     #[account(
         mut,
-        address = prod.metadata.owner_catalog
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
-        mut,
-        address = vendor_listings.listings_owner
+        has_one = wallet
     )]
-    pub seller_wallet: Signer<'info>
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut
+    )]
+    pub wallet: Signer<'info>
 }
 
 impl CommissionProduct{
     pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
-        ctx.accounts.commission_product.metadata = prod;
+        ctx.accounts.prod.metadata = prod;
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
@@ -94,7 +116,7 @@ impl CommissionProduct{
             };
 
             let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
-            edit_recent_listings_handler(recent_catalog, ctx.accounts.commission_product.to_account_info())?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.prod.to_account_info())?;
             recent_catalog.exit(&crate::ID)?;
         }
         Ok(())    
@@ -126,50 +148,71 @@ pub struct ListDigitalProduct<'info>{
     #[account(
         init,
         space = 250,
-        payer = seller_wallet,
+        payer = wallet,
         seeds = [
             b"digital_product",
             vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
-        bump
+        bump,
+        constraint = prod_in.owner_catalog == vendor_account.voter_id
     )]
-    pub digital_product: Account<'info, DigitalProduct>,
-
-    #[account(mut)]
-    pub vendor_listings: Account<'info, ListingsStruct>,
+    pub prod: Account<'info, DigitalProduct>,
 
     #[account(
         mut,
-        address = vendor_listings.listings_owner
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
-    pub seller_wallet: Signer<'info>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        has_one = wallet
+    )]
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut
+    )]
+    pub wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>
 }
-
-
 
 #[derive(Accounts)]
 pub struct UnlistDigitalProduct<'info>{
     #[account(
         mut,
-        close = seller_wallet
+        constraint = prod.metadata.owner_catalog == vendor_account.voter_id,
+        close = wallet
     )]
     /// CHECK: we do owner check
     pub prod: Account<'info, DigitalProduct>,
 
     #[account(
         mut,
-        address = prod.metadata.owner_catalog
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
-        mut,
-        address = vendor_listings.listings_owner
+        has_one = wallet
     )]
-    pub seller_wallet: Signer<'info>
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut
+    )]
+    pub wallet: Signer<'info>
 }
 
 
@@ -177,8 +220,8 @@ impl DigitalProduct{
     pub fn list(ctx: Context<ListDigitalProduct>, prod: OrbitProductStruct, file_type: DigitalFileTypes)-> Result<()> {
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
-        ctx.accounts.digital_product.metadata = prod;
-        ctx.accounts.digital_product.digital_file_type = file_type;
+        ctx.accounts.prod.metadata = prod;
+        ctx.accounts.prod.digital_file_type = file_type;
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
@@ -192,7 +235,7 @@ impl DigitalProduct{
             };
 
             let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
-            edit_recent_listings_handler(recent_catalog, ctx.accounts.digital_product.to_account_info())?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.prod.to_account_info())?;
             recent_catalog.exit(&crate::ID)?;
         }
         Ok(())
@@ -223,25 +266,38 @@ pub struct ListPhysicalProduct<'info>{
     #[account(
         init,
         space = 250, // 106 + 8. leave room for adjustment during launch
-        payer = seller_wallet,
+        payer = wallet,
 
         seeds = [
             b"physical_product",
             vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
-        bump
+        bump,
+        constraint = prod_in.owner_catalog == vendor_account.voter_id
     )]
-    pub phys_product: Account<'info, PhysicalProduct>,
-
-    #[account(mut)]
-    pub vendor_listings: Account<'info, ListingsStruct>,
+    pub prod: Account<'info, PhysicalProduct>,
 
     #[account(
         mut,
-        address = vendor_listings.listings_owner
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
-    pub seller_wallet: Signer<'info>,
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    #[account(
+        has_one = wallet
+    )]
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut
+    )]
+    pub wallet: Signer<'info>,
     
     pub system_program: Program<'info, System>
 }
@@ -250,30 +306,38 @@ pub struct ListPhysicalProduct<'info>{
 pub struct UnlistPhysicalProduct<'info>{
     #[account(
         mut,
-        close = seller_wallet
+        constraint = prod.metadata.owner_catalog == vendor_account.voter_id,
+        close = wallet
     )]
     /// CHECK: we do owner check
     pub prod: Account<'info, PhysicalProduct>,
 
     #[account(
         mut,
-        address = prod.metadata.owner_catalog
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
 
     #[account(
-        mut,
-        address = vendor_listings.listings_owner
+        has_one = wallet
     )]
-    pub seller_wallet: Signer<'info>
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(mut)]
+    pub wallet: Signer<'info>
 }
 
 impl PhysicalProduct{
     pub fn list(ctx: Context<ListPhysicalProduct>, prod: OrbitProductStruct, quantity: u32) -> Result<()>{
         list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
 
-        ctx.accounts.phys_product.metadata = prod;
-        ctx.accounts.phys_product.quantity = quantity;
+        ctx.accounts.prod.metadata = prod;
+        ctx.accounts.prod.quantity = quantity;
 
         if ctx.remaining_accounts.len() == 1{
             let addr = Pubkey::find_program_address(&[
@@ -287,7 +351,7 @@ impl PhysicalProduct{
             };
 
             let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
-            edit_recent_listings_handler(recent_catalog, ctx.accounts.phys_product.to_account_info())?;
+            edit_recent_listings_handler(recent_catalog, ctx.accounts.prod.to_account_info())?;
             recent_catalog.exit(&crate::ID)?;
         }
         Ok(())
@@ -333,7 +397,7 @@ pub struct UpdateProductField<'info>{
         mut,
         address = vendor_listings.listings_owner
     )]
-    pub seller_wallet: Signer<'info>,
+    pub wallet: Signer<'info>,
 }
 
 pub fn update_info_handler(ctx: Context<UpdateProductField>, info: String) -> Result<()>{
@@ -506,7 +570,7 @@ pub struct FlushListings<'info>{
         mut,
         address = vendor_listings.listings_owner
     )]
-    pub seller_wallet: Signer<'info>
+    pub wallet: Signer<'info>
 }
 
 pub fn flush_listings_handler(ctx: Context<FlushListings>) -> Result<()>{
