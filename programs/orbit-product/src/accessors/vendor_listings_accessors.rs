@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use market_accounts::OrbitMarketAccount;
 use crate::{ListingsStruct, ProductErrors};
 
 #[derive(Accounts)]
@@ -9,13 +10,15 @@ pub struct CreateVendorListing<'info>{
         seeds = [
             b"vendor_listings",
             market_type.as_bytes(),
-            wallet.key().as_ref()
+            vendor_account.voter_id.to_bytes()
         ],
         bump,
         payer = wallet,
         space = 200
     )]
     pub vendor_listings: Account<'info, ListingsStruct>,
+
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
     
     #[account(mut)]
     pub wallet: Signer<'info>,
