@@ -6,3 +6,6 @@ pub use prod_common::*;
 
 pub mod recent_listings_accessors;
 pub use recent_listings_accessors::*;
+
+pub mod product_types;
+pub use product_types::*;

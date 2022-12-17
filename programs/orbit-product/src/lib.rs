@@ -33,6 +33,25 @@ pub mod orbit_product {
         init_physical_listings_handler(ctx)
     }
 
+    pub fn digital_update_info(ctx: Context<UpdateDigitalProductField>, info: String) -> Result<()>{
+        digital_update_info_handler(ctx, info)
+    }
+    pub fn digital_update_price(ctx: Context<UpdateDigitalProductField>, price: u64) -> Result<()>{
+        digital_update_price_handler(ctx, price)
+    }
+    pub fn digital_update_delivery_estimate(ctx: Context<UpdateDigitalProductField>, delivery_estimate: u8) -> Result<()>{
+        digital_update_delivery_estimate_handler(ctx, delivery_estimate)
+    }
+    pub fn digital_update_media(ctx: Context<UpdateDigitalProductField>, link: String) -> Result<()>{
+        digital_update_media_handler(ctx, link)
+    }
+    pub fn digital_mark_available(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+        digital_mark_available_handler(ctx)
+    }
+    pub fn digital_mark_unavailable(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+        digital_mark_unavailable_handler(ctx)
+    }
+
     // PRODUCT UTILS
 
     pub fn list_commission_product(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct) -> Result<()>{
@@ -67,45 +86,63 @@ pub mod orbit_product {
         transfer_all_vendor_listings_ownership_handler(ctx)
     }
 
-    /// PRODUCT MODIFIERS
-    
-    pub fn mark_prod_available(ctx: Context<UpdateProductField>) -> Result<()>{
-        mark_available_handler(ctx)
-    }
-    pub fn mark_prod_unavailable(ctx: Context<UpdateProductField>) -> Result<()>{
-        mark_unavailable_handler(ctx)
-    }
-    
-    pub fn update_product_price(ctx: Context<UpdateProductField>, price: u64) -> Result<()>{
-        update_price_handler(ctx, price)
-    }
-    pub fn set_media(ctx: Context<UpdateProductField>, link: String) -> Result<()>{
-        update_media_handler(ctx, link)
-    }
-    pub fn update_delivery_estimate(ctx: Context<UpdateProductField>, delivery_estimate: u8) -> Result<()>{
-        update_delivery_estimate_handler(ctx, delivery_estimate)
-    }
-    pub fn set_prod_info(ctx: Context<UpdateProductField>, info: String) -> Result<()>{
-        update_info_handler(ctx, info)
-    }
 
     /// PHYSICAL
-    pub fn update_product_quantity(ctx: Context<UpdateProductField>, qnt: u32) -> Result<()>{
+    pub fn update_product_quantity(ctx: Context<UpdatePhysicalQuantity>, qnt: u32) -> Result<()>{
         update_quantity_handler(ctx, qnt)
     }
 
-    pub fn update_product_quantity_internal(ctx: Context<UpdateProductFieldInternal>, qnt: u32) -> Result<()>{
+    pub fn update_product_quantity_internal(ctx: Context<UpdatePhysicalQuantityInternal>, qnt: u32) -> Result<()>{
         update_quantity_internal_handler(ctx, qnt)
+    }
+
+    pub fn physical_update_info(ctx: Context<UpdatePhysicalProductField>, info: String) -> Result<()>{
+        physical_update_info_handler(ctx, info)
+    }
+    pub fn physical_update_price(ctx: Context<UpdatePhysicalProductField>, price: u64) -> Result<()>{
+        physical_update_price_handler(ctx, price)
+    }
+    pub fn physical_update_delivery_estimate(ctx: Context<UpdatePhysicalProductField>, delivery_estimate: u8) -> Result<()>{
+        physical_update_delivery_estimate_handler(ctx, delivery_estimate)
+    }
+    pub fn physical_update_media(ctx: Context<UpdatePhysicalProductField>, link: String) -> Result<()>{
+        physical_update_media_handler(ctx, link)
+    }
+    pub fn physical_mark_available(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+        physical_mark_available_handler(ctx)
+    }
+    pub fn physical_mark_unavailable(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+        physical_mark_unavailable_handler(ctx)
     }
 
     /// DIGITAL
     
-    pub fn set_file_type(ctx: Context<UpdateProductField>, file_type: DigitalFileTypes) -> Result<()>{
+    pub fn set_file_type(ctx: Context<SetFileType>, file_type: DigitalFileTypes) -> Result<()>{
         set_file_type_handler(ctx, file_type)
     }
 
+    /// COMMISSIONS
+    pub fn commission_update_info(ctx: Context<UpdateCommissionProductField>, info: String) -> Result<()>{
+        commission_update_info_handler(ctx, info)
+    }
+    pub fn commission_update_price(ctx: Context<UpdateCommissionProductField>, price: u64) -> Result<()>{
+        commission_update_price_handler(ctx, price)
+    }
+    pub fn commission_update_delivery_estimate(ctx: Context<UpdateCommissionProductField>, delivery_estimate: u8) -> Result<()>{
+        commission_update_delivery_estimate_handler(ctx, delivery_estimate)
+    }
+    pub fn commission_update_media(ctx: Context<UpdateCommissionProductField>, link: String) -> Result<()>{
+        commission_update_media_handler(ctx, link)
+    }
+    pub fn commission_mark_available(ctx: Context<UpdateCommissionProductField>) -> Result<()>{
+        commission_mark_available_handler(ctx)
+    }
+    pub fn commission_mark_unavailable(ctx: Context<UpdateCommissionProductField>) -> Result<()>{
+        commission_mark_unavailable_handler(ctx)
+    }
+
+    /// FLUSH LISTINGS
     pub fn flush_listings(ctx: Context<FlushListings>) -> Result<()>{
         flush_listings_handler(ctx)
     }
-
 }

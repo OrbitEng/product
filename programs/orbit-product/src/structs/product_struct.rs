@@ -11,7 +11,7 @@ pub struct OrbitProductStruct{ // size 170 :0-8
     pub delivery_estimate: u8, // rough delivery ETA :96-97
     pub media: String, // :97-101-144
     pub times_sold: u32, // :144-145
-
+    pub search_indexed: bool
 }
 
 /// DIGITAL
