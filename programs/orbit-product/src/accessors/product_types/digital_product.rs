@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use market_accounts::OrbitMarketAccount;
+use orbit_addresses::DIGITAL_ADDRESS;
 
 use crate::{
     structs::DigitalProduct,
@@ -170,6 +171,54 @@ pub struct SetFileType<'info>{
 
 pub fn set_file_type_handler(ctx: Context<SetFileType>, file_type: DigitalFileTypes) -> Result<()>{    
     ctx.accounts.product.digital_file_type = file_type;
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct UpdateDigitalQuantityInternal<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"physical_product",
+            vendor_listings.key().as_ref(),
+            &[product.metadata.index]
+        ],
+        bump,
+    )]
+    pub product: Account<'info, DigitalProduct>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        address = Pubkey::new(DIGITAL_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
+pub fn digital_increment_times_sold_handler(ctx: Context<UpdateDigitalQuantityInternal>) -> Result<()>{
+    ctx.accounts.product.metadata.times_sold += 1;
     Ok(())
 }
 

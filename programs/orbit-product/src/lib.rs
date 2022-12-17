@@ -73,6 +73,9 @@ pub mod orbit_product {
         update_quantity_internal_handler(ctx, qnt)
     }
 
+    pub fn physical_increment_times_sold(ctx: Context<UpdatePhysicalQuantityInternal>) -> Result<()>{
+        physical_increment_times_sold_handler(ctx)
+    }
         //
         pub fn physical_update_info(ctx: Context<UpdatePhysicalProductField>, info: String) -> Result<()>{
             physical_update_info_handler(ctx, info)
@@ -99,6 +102,9 @@ pub mod orbit_product {
         set_file_type_handler(ctx, file_type)
     }
     
+    pub fn digital_increment_times_sold(ctx: Context<UpdateDigitalQuantityInternal>) -> Result<()>{
+        digital_increment_times_sold_handler(ctx)
+    }
         //
         pub fn digital_update_info(ctx: Context<UpdateDigitalProductField>, info: String) -> Result<()>{
             digital_update_info_handler(ctx, info)
@@ -120,6 +126,11 @@ pub mod orbit_product {
         }
 
     /// COMMISSIONS
+    
+    pub fn commission_increment_times_sold(ctx: Context<UpdateCommissionQuantityInternal>) -> Result<()>{
+        commission_increment_times_sold_handler(ctx)
+    }
+
         pub fn commission_update_info(ctx: Context<UpdateCommissionProductField>, info: String) -> Result<()>{
             commission_update_info_handler(ctx, info)
         }

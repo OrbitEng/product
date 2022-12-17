@@ -229,6 +229,11 @@ pub fn update_quantity_internal_handler(ctx: Context<UpdatePhysicalQuantityInter
     Ok(())
 }
 
+pub fn physical_increment_times_sold_handler(ctx: Context<UpdatePhysicalQuantityInternal>) -> Result<()>{
+    ctx.accounts.product.metadata.times_sold += 1;
+    Ok(())
+}
+
 ////////////////////////////////////////////
 /// GENERAL
 
