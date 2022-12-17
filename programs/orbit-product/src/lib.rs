@@ -73,7 +73,7 @@ pub mod orbit_product {
         update_quantity_internal_handler(ctx, qnt)
     }
 
-    pub fn physical_increment_times_sold(ctx: Context<UpdatePhysicalQuantityInternal>) -> Result<()>{
+    pub fn physical_increment_times_sold(ctx: Context<IncrementPhysicalSoldInternal>) -> Result<()>{
         physical_increment_times_sold_handler(ctx)
     }
         //

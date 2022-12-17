@@ -135,28 +135,9 @@ pub fn unlist_commission_handler(ctx: Context<UnlistCommissionProduct>) -> Resul
 #[derive(Accounts)]
 pub struct UpdateCommissionQuantityInternal<'info>{
     #[account(
-        mut,
-        seeds = [
-            b"physical_product",
-            vendor_listings.key().as_ref(),
-            &[product.metadata.index]
-        ],
-        bump,
+        mut
     )]
     pub product: Account<'info, CommissionProduct>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
-            &vendor_account.voter_id.to_le_bytes()
-        ],
-        bump
-    )]
-    pub vendor_listings: Account<'info, ListingsStruct>,
-
-    pub vendor_account: Account<'info, OrbitMarketAccount>,
 
     #[account(
         seeds = [

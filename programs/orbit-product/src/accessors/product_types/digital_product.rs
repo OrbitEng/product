@@ -177,28 +177,9 @@ pub fn set_file_type_handler(ctx: Context<SetFileType>, file_type: DigitalFileTy
 #[derive(Accounts)]
 pub struct UpdateDigitalQuantityInternal<'info>{
     #[account(
-        mut,
-        seeds = [
-            b"physical_product",
-            vendor_listings.key().as_ref(),
-            &[product.metadata.index]
-        ],
-        bump,
+        mut
     )]
     pub product: Account<'info, DigitalProduct>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
-            &vendor_account.voter_id.to_le_bytes()
-        ],
-        bump
-    )]
-    pub vendor_listings: Account<'info, ListingsStruct>,
-
-    pub vendor_account: Account<'info, OrbitMarketAccount>,
 
     #[account(
         seeds = [

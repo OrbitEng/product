@@ -229,7 +229,31 @@ pub fn update_quantity_internal_handler(ctx: Context<UpdatePhysicalQuantityInter
     Ok(())
 }
 
-pub fn physical_increment_times_sold_handler(ctx: Context<UpdatePhysicalQuantityInternal>) -> Result<()>{
+#[derive(Accounts)]
+pub struct IncrementPhysicalSoldInternal<'info>{
+    #[account(
+        mut
+    )]
+    pub product: Account<'info, PhysicalProduct>,
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        address = Pubkey::new(PHYSICAL_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
+pub fn physical_increment_times_sold_handler(ctx: Context<IncrementPhysicalSoldInternal>) -> Result<()>{
     ctx.accounts.product.metadata.times_sold += 1;
     Ok(())
 }
