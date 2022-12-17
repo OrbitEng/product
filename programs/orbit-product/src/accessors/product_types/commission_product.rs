@@ -91,43 +91,42 @@ pub struct UnlistCommissionProduct<'info>{
     pub wallet: Signer<'info>
 }
 
-impl CommissionProduct{
-    pub fn list(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct)-> Result<()> {
-        list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
-        ctx.accounts.prod.metadata = prod;
+pub fn list_commission_handler(ctx: Context<ListCommissionProduct>, prod: OrbitProductStruct)-> Result<()> {
+    list_product_handler(&mut ctx.accounts.vendor_listings, prod.index)?;
+    ctx.accounts.prod.metadata = prod;
 
-        if ctx.remaining_accounts.len() == 1{
-            let addr = Pubkey::find_program_address(&[
-                b"recent_listings".as_ref(),
-                b"commission".as_ref()
-            ], 
-            &crate::ID);
+    if ctx.remaining_accounts.len() == 1{
+        let addr = Pubkey::find_program_address(&[
+            b"recent_listings".as_ref(),
+            b"commission".as_ref()
+        ], 
+        &crate::ID);
 
-            if ctx.remaining_accounts[0].key() != addr.0{
-                return err!(ProductErrors::InvalidCatalogType)
-            };
+        if ctx.remaining_accounts[0].key() != addr.0{
+            return err!(ProductErrors::InvalidCatalogType)
+        };
 
-            let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
-            edit_recent_listings_handler(recent_catalog, ctx.accounts.prod.to_account_info())?;
-            recent_catalog.exit(&crate::ID)?;
-        }
-        Ok(())    
+        let recent_catalog = &mut Account::<RecentMarketListings>::try_from(&ctx.remaining_accounts[0])?;
+        edit_recent_listings_handler(recent_catalog, ctx.accounts.prod.to_account_info())?;
+        recent_catalog.exit(&crate::ID)?;
     }
-
-    pub fn unlist(ctx: Context<UnlistCommissionProduct>) -> Result<()>{
-        //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
-
-        let listings_index = ctx.accounts.prod.metadata.index;
-
-        let avail_ind = 1<<(listings_index%64);
-        let outer_ind = listings_index/64;
-        
-        ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
-        ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
-        
-        Ok(())
-    }
+    Ok(())    
 }
+
+pub fn unlist_commission_handler(ctx: Context<UnlistCommissionProduct>) -> Result<()>{
+    //https://github.com/coral-xyz/anchor/blob/master/lang/src/common.rs
+
+    let listings_index = ctx.accounts.prod.metadata.index;
+
+    let avail_ind = 1<<(listings_index%64);
+    let outer_ind = listings_index/64;
+    
+    ctx.accounts.vendor_listings.address_available[outer_ind as usize] |= avail_ind;
+    ctx.accounts.vendor_listings.product_available[outer_ind as usize] &= !(avail_ind as u64);
+    
+    Ok(())
+}
+
 
 ////////////////////////////////////////////
 /// GENERAL
