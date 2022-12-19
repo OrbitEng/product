@@ -89,11 +89,14 @@ pub mod orbit_product {
         pub fn physical_update_media(ctx: Context<UpdatePhysicalProductField>, link: String) -> Result<()>{
             physical_update_media_handler(ctx, link)
         }
-        pub fn physical_mark_available(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+        pub fn physical_mark_available(ctx: Context<UpdatePhysicalProductListingField>) -> Result<()>{
             physical_mark_available_handler(ctx)
         }
-        pub fn physical_mark_unavailable(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+        pub fn physical_mark_unavailable(ctx: Context<UpdatePhysicalProductListingField>) -> Result<()>{
             physical_mark_unavailable_handler(ctx)
+        }
+        pub fn mark_physical_searchable(ctx:Context<UpdatePhysicalProductField>) -> Result<()>{
+            mark_physical_searchable_handler(ctx)
         }
 
     /// DIGITAL
@@ -118,13 +121,15 @@ pub mod orbit_product {
         pub fn digital_update_media(ctx: Context<UpdateDigitalProductField>, link: String) -> Result<()>{
             digital_update_media_handler(ctx, link)
         }
-        pub fn digital_mark_available(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+        pub fn digital_mark_available(ctx: Context<UpdateDigitalProductListingField>) -> Result<()>{
             digital_mark_available_handler(ctx)
         }
-        pub fn digital_mark_unavailable(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+        pub fn digital_mark_unavailable(ctx: Context<UpdateDigitalProductListingField>) -> Result<()>{
             digital_mark_unavailable_handler(ctx)
         }
-
+        pub fn mark_digital_searchable(ctx:Context<UpdateDigitalProductField>) -> Result<()>{
+            mark_digital_searchable_handler(ctx)
+        }
     /// COMMISSIONS
     
     pub fn commission_increment_times_sold(ctx: Context<UpdateCommissionQuantityInternal>) -> Result<()>{
@@ -143,13 +148,15 @@ pub mod orbit_product {
         pub fn commission_update_media(ctx: Context<UpdateCommissionProductField>, link: String) -> Result<()>{
             commission_update_media_handler(ctx, link)
         }
-        pub fn commission_mark_available(ctx: Context<UpdateCommissionProductField>) -> Result<()>{
+        pub fn commission_mark_available(ctx: Context<UpdateCommissionProductListingField>) -> Result<()>{
             commission_mark_available_handler(ctx)
         }
-        pub fn commission_mark_unavailable(ctx: Context<UpdateCommissionProductField>) -> Result<()>{
+        pub fn commission_mark_unavailable(ctx: Context<UpdateCommissionProductListingField>) -> Result<()>{
             commission_mark_unavailable_handler(ctx)
         }
-
+        pub fn mark_commission_searchable(ctx:Context<UpdateCommissionProductField>) -> Result<()>{
+            mark_commission_searchable_handler(ctx)
+        }
     /// FLUSH LISTINGS
     pub fn flush_listings(ctx: Context<FlushListings>) -> Result<()>{
         flush_listings_handler(ctx)

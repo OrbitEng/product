@@ -210,25 +210,9 @@ pub fn digital_increment_times_sold_handler(ctx: Context<UpdateDigitalQuantityIn
 pub struct UpdateDigitalProductField<'info>{
     #[account(
         mut,
-        seeds = [
-            b"digital_product",
-            vendor_listings.key().as_ref(),
-            &[product.metadata.index]
-        ],
-        bump,
+        constraint = product.metadata.owner_catalog == vendor_account.voter_id
     )]
     pub product: Account<'info, DigitalProduct>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
-            &vendor_account.voter_id.to_le_bytes()
-        ],
-        bump
-    )]
-    pub vendor_listings: Account<'info, ListingsStruct>,
 
     pub vendor_account: Account<'info, OrbitMarketAccount>,
 
@@ -259,10 +243,48 @@ pub fn digital_update_media_handler(ctx: Context<UpdateDigitalProductField>, lin
     Ok(())
 }
 
-pub fn digital_mark_available_handler(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+pub fn mark_digital_searchable_handler(ctx:Context<UpdateDigitalProductField>) -> Result<()>{
+    ctx.accounts.product.metadata.search_indexed = true;
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct UpdateDigitalProductListingField<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"digital_product",
+            vendor_listings.key().as_ref(),
+            &[product.metadata.index]
+        ],
+        bump,
+    )]
+    pub product: Account<'info, DigitalProduct>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut,
+        address = vendor_account.wallet
+    )]
+    pub wallet: Signer<'info>,
+}
+
+pub fn digital_mark_available_handler(ctx: Context<UpdateDigitalProductListingField>) -> Result<()>{
     mark_prod_available_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.metadata.index)
 }
 
-pub fn digital_mark_unavailable_handler(ctx: Context<UpdateDigitalProductField>) -> Result<()>{
+pub fn digital_mark_unavailable_handler(ctx: Context<UpdateDigitalProductListingField>) -> Result<()>{
     mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.metadata.index)
 }

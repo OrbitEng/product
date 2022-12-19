@@ -265,25 +265,9 @@ pub fn physical_increment_times_sold_handler(ctx: Context<IncrementPhysicalSoldI
 pub struct UpdatePhysicalProductField<'info>{
     #[account(
         mut,
-        seeds = [
-            b"physical_product",
-            vendor_listings.key().as_ref(),
-            &[product.metadata.index]
-        ],
-        bump,
+        constraint = product.metadata.owner_catalog == vendor_account.voter_id
     )]
     pub product: Account<'info, PhysicalProduct>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
-            &vendor_account.voter_id.to_le_bytes()
-        ],
-        bump
-    )]
-    pub vendor_listings: Account<'info, ListingsStruct>,
 
     pub vendor_account: Account<'info, OrbitMarketAccount>,
 
@@ -314,10 +298,48 @@ pub fn physical_update_media_handler(ctx: Context<UpdatePhysicalProductField>, l
     Ok(())
 }
 
-pub fn physical_mark_available_handler(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+pub fn mark_physical_searchable_handler(ctx:Context<UpdatePhysicalProductField>) -> Result<()>{
+    ctx.accounts.product.metadata.search_indexed = true;
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct UpdatePhysicalProductListingField<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"physical_product",
+            vendor_listings.key().as_ref(),
+            &[product.metadata.index]
+        ],
+        bump,
+    )]
+    pub product: Account<'info, PhysicalProduct>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"vendor_listings",
+            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            &vendor_account.voter_id.to_le_bytes()
+        ],
+        bump
+    )]
+    pub vendor_listings: Account<'info, ListingsStruct>,
+
+    pub vendor_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut,
+        address = vendor_account.wallet
+    )]
+    pub wallet: Signer<'info>,
+}
+
+pub fn physical_mark_available_handler(ctx: Context<UpdatePhysicalProductListingField>) -> Result<()>{
     mark_prod_available_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.metadata.index)
 }
 
-pub fn physical_mark_unavailable_handler(ctx: Context<UpdatePhysicalProductField>) -> Result<()>{
+pub fn physical_mark_unavailable_handler(ctx: Context<UpdatePhysicalProductListingField>) -> Result<()>{
     mark_prod_unavailable_handler(&mut ctx.accounts.vendor_listings, ctx.accounts.product.metadata.index)
 }
