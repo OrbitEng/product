@@ -2,18 +2,9 @@ use anchor_lang::{
     prelude::*
 };
 
-use orbit_addresses::{
-    PHYSICAL_ADDRESS,
-    DIGITAL_ADDRESS,
-    COMMISSION_ADDRESS,
-    SEARCH_ADDRESS
-};
+use orbit_addresses::SEARCH_ADDRESS;
 
-use crate::{
-    ListingsStruct,
-    mark_prod_available_handler,
-    mark_prod_unavailable_handler, ProductErrors
-};
+use crate::ListingsStruct;
 
 /////////////////////////////////
 /// SEARCH CPI
