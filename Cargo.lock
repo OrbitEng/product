@@ -780,7 +780,7 @@ dependencies = [
 [[package]]
 name = "market-accounts"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/accounts#88344feb204741f7a013daaba90c38c7ae13f963"
+source = "git+https://github.com/OrbitEng/accounts#2e8068b70f5ac714567f641b6fdf33215509118d"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
@@ -864,7 +864,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "orbit-addresses"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/addresses#e63259b6b634fd6bf756f8eb79e1b9e99eb979e4"
+source = "git+https://github.com/OrbitEng/addresses#e6ae6169c66fc4d3f90c91ae20a2b44fe4347989"
 dependencies = [
  "anchor-lang",
 ]
