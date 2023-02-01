@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use market_accounts::{OrbitMarketAccount, AccountTransfer, program::OrbitMarketAccounts};
-use crate::{ListingsStruct, ProductErrors, ListingsType, program::OrbitProduct};
+use crate::{ListingsStruct, ProductErrors, program::OrbitProduct};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 /// COMMISSIONS LISTINGS
@@ -10,8 +10,8 @@ pub struct CreateCommissionsListing<'info>{
     #[account(
         init,
         seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            b"vendor_listings".as_ref(),
+            b"commission".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump,
@@ -65,8 +65,8 @@ pub struct CreateDigitalListing<'info>{
     #[account(
         init,
         seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            b"vendor_listings".as_ref(),
+            b"digital".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump,
@@ -120,8 +120,8 @@ pub struct CreatePhysicalListings<'info>{
     #[account(
         init,
         seeds = [
-            b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"vendor_listings".as_ref(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump,
