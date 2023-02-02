@@ -1,0 +1,18 @@
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\deps\typenum-e265a8e99c623698.rmeta: C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\lib.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\bit.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\int.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\marker_traits.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\operator_aliases.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\private.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\type_operators.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\uint.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\array.rs c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\op.rs c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\consts.rs
+
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\deps\typenum-e265a8e99c623698.d: C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\lib.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\bit.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\int.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\marker_traits.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\operator_aliases.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\private.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\type_operators.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\uint.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\array.rs c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\op.rs c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\consts.rs
+
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\lib.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\bit.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\int.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\marker_traits.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\operator_aliases.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\private.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\type_operators.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\uint.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\typenum-1.16.0\src\array.rs:
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\op.rs:
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\build\typenum-0b8d6edff630f992\out\consts.rs:
+
+# env-dep:TYPENUM_BUILD_CONSTS=c:\\Users\\popre\\Desktop\\rust\\orbit-monorepo\\backend\\product\\target\\debug\\build\\typenum-0b8d6edff630f992\\out\\consts.rs
+# env-dep:TYPENUM_BUILD_OP=c:\\Users\\popre\\Desktop\\rust\\orbit-monorepo\\backend\\product\\target\\debug\\build\\typenum-0b8d6edff630f992\\out\\op.rs

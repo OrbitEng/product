@@ -1,0 +1,5 @@
+/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/product/target/release/build/serde-0d289fb01ec1b068/build_script_build-0d289fb01ec1b068: /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.143/build.rs
+
+/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/product/target/release/build/serde-0d289fb01ec1b068/build_script_build-0d289fb01ec1b068.d: /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.143/build.rs
+
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.143/build.rs:

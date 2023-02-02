@@ -1,0 +1,12 @@
+/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/product/target/debug/deps/yansi-76778e7c655b55fe.rmeta: /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/lib.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/macros.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/windows.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/paint.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/style.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/color.rs
+
+/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/product/target/debug/deps/libyansi-76778e7c655b55fe.rlib: /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/lib.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/macros.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/windows.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/paint.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/style.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/color.rs
+
+/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/product/target/debug/deps/yansi-76778e7c655b55fe.d: /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/lib.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/macros.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/windows.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/paint.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/style.rs /home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/color.rs
+
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/lib.rs:
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/macros.rs:
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/windows.rs:
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/paint.rs:
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/style.rs:
+/home/poprer656sad/.cargo/registry/src/github.com-1ecc6299db9ec823/yansi-0.5.1/src/color.rs:

@@ -1,0 +1,14 @@
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\deps\blake3-95c9b4be80ddae0e.rmeta: C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\lib.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\guts.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\platform.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx2.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx512.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\portable.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse2.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse41.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\traits.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\join.rs
+
+c:\Users\popre\Desktop\rust\orbit-monorepo\backend\product\target\debug\deps\blake3-95c9b4be80ddae0e.d: C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\lib.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\guts.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\platform.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx2.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx512.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\portable.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse2.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse41.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\traits.rs C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\join.rs
+
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\lib.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\guts.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\platform.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx2.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_avx512.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\portable.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse2.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\ffi_sse41.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\traits.rs:
+C:\Users\popre\.cargo\registry\src\github.com-1ecc6299db9ec823\blake3-1.3.3\src\join.rs:
