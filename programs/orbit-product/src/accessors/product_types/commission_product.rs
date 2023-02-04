@@ -9,7 +9,6 @@ use crate::{
     structs::ListingsStruct,
     structs::OrbitProductStruct,
     structs::RecentMarketListings,
-    structs::ListingsType,
 
     errors::ProductErrors,
 
@@ -43,7 +42,7 @@ pub struct ListCommissionProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            b"commission".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -74,7 +73,7 @@ pub struct UnlistCommissionProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            b"commission".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -223,7 +222,7 @@ pub struct UpdateCommissionProductListingField<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Commissions).try_to_vec()?).as_slice(),
+            b"commission".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump

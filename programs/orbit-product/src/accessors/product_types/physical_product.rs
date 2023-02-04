@@ -9,7 +9,6 @@ use crate::{
     structs::ListingsStruct,
     structs::OrbitProductStruct,
     structs::RecentMarketListings,
-    structs::ListingsType,
 
     errors::ProductErrors,
 
@@ -31,7 +30,7 @@ pub struct ListPhysicalProduct<'info>{
         payer = wallet,
 
         seeds = [
-            b"physical_product",
+            b"physical_product".as_ref(),
             vendor_listings.key().as_ref(),
             &[prod_in.index]
         ],
@@ -44,7 +43,7 @@ pub struct ListPhysicalProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -78,7 +77,7 @@ pub struct UnlistPhysicalProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -154,7 +153,7 @@ pub struct UpdatePhysicalQuantity<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -195,7 +194,7 @@ pub struct UpdatePhysicalQuantityInternal<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -320,7 +319,7 @@ pub struct UpdatePhysicalProductListingField<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Physical).try_to_vec()?).as_slice(),
+            b"physical".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump

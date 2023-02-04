@@ -8,7 +8,6 @@ use crate::{
     structs::OrbitProductStruct,
     structs::RecentMarketListings,
     structs::DigitalFileTypes,
-    structs::ListingsType,
 
     errors::ProductErrors,
 
@@ -43,7 +42,7 @@ pub struct ListDigitalProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            b"digital".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -77,7 +76,7 @@ pub struct UnlistDigitalProduct<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            b"digital".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -153,7 +152,7 @@ pub struct SetFileType<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            b"digital".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
@@ -265,7 +264,7 @@ pub struct UpdateDigitalProductListingField<'info>{
         mut,
         seeds = [
             b"vendor_listings",
-            (&(ListingsType::Digital).try_to_vec()?).as_slice(),
+            b"digital".as_ref(),
             &vendor_account.voter_id.to_le_bytes()
         ],
         bump
