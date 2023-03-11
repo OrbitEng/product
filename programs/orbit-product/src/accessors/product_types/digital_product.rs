@@ -191,7 +191,7 @@ pub struct UpdateDigitalQuantityInternal<'info>{
 
     #[account(
         executable,
-        address = Pubkey::new(DIGITAL_ADDRESS)
+        address = Pubkey::from(DIGITAL_ADDRESS)
     )]
     /// CHECK: we do basic checks
     pub caller: AccountInfo<'info>

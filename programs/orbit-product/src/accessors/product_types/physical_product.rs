@@ -214,7 +214,7 @@ pub struct UpdatePhysicalQuantityInternal<'info>{
 
     #[account(
         executable,
-        address = Pubkey::new(PHYSICAL_ADDRESS)
+        address = Pubkey::from(PHYSICAL_ADDRESS)
     )]
     /// CHECK: we do basic checks
     pub caller: AccountInfo<'info>
@@ -246,7 +246,7 @@ pub struct IncrementPhysicalSoldInternal<'info>{
 
     #[account(
         executable,
-        address = Pubkey::new(PHYSICAL_ADDRESS)
+        address = Pubkey::from(PHYSICAL_ADDRESS)
     )]
     /// CHECK: we do basic checks
     pub caller: AccountInfo<'info>

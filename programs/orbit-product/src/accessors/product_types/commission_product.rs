@@ -149,7 +149,7 @@ pub struct UpdateCommissionQuantityInternal<'info>{
 
     #[account(
         executable,
-        address = Pubkey::new(COMMISSION_ADDRESS)
+        address = Pubkey::from(COMMISSION_ADDRESS)
     )]
     /// CHECK: we do basic checks
     pub caller: AccountInfo<'info>
