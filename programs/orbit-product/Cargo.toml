@@ -16,6 +16,6 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-anchor-lang = "0.26.0"
+anchor-lang = "0.27.0"
 orbit-addresses = {git = "https://github.com/OrbitEng/addresses"}
 market-accounts =  {git = "https://github.com/OrbitEng/accounts", features=["cpi"]}
